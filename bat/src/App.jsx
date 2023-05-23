@@ -3,13 +3,12 @@ import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState("")
+  //buttonlar basıldıktan sonra kullanılmaz hale gelsin.
   const [firstNum, setFirstNum] = useState("")
   const [secondNum, setSecondNum] = useState("")
   const [ope, setOpe] = useState("")
-
-  //const [display, setDisplay] = useState(firstNum+ope+secondNum || "")
-  //display anlık değişmeli ve önceki işlemleri tutmalı
+  const [operations, setOperations] = useState([]);
+  
 
   const [finalNum, setFinalNum] = useState("")
   const [num1, setNum1] = useState("")
@@ -25,9 +24,8 @@ function App() {
     setNum3(Math.floor((Math.random() * 10))+1)
     setNum4(Math.floor((Math.random() * 10))+1)
     setNum5(Math.floor((Math.random() * 10))+1)
-  }, []);
+  }, [])
    
-  
   function result(a,b,c){
     if(b === "+"){
       return +a + +c
@@ -40,26 +38,57 @@ function App() {
     } else if (b === "*"){
       return a*c
     } else {
-      return a/c
+      return (a/c).toFixed(2)
     }
   }
-  console.log(`first=${firstNum}`)
-  console.log(`ope=${ope}`)
-  console.log(`sec=${secondNum}`)
+
+
+  function handleCalculate(){
+    const calculatedResult  = result(firstNum,ope,secondNum)
+
+    const operation = {
+      firstNum,
+      ope,
+      secondNum,
+      count: calculatedResult 
+    }
+    setOperations(prevOperations => [...prevOperations, operation])
+    setFirstNum("")
+    setOpe("")
+    setSecondNum("")
+    
+    
+  };
+
+  const displayOperation =  operations.map((operation, index) => (
+    <div key={index} class="operations">
+      <p>
+        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.  count}`}
+      </p>
+      <button value={operation.count} onClick={e => firstNum==="" ? setFirstNum(e.  target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target. value)}>{operation.count}</button>
+    </div>
+  ))
+
+
+
+ 
+  
+  //console.log(operations)
+  
   return (
     <>
     
       <h1>Bir İşlem</h1>
 
-      <h2>Final Num: {finalNum}</h2>
+      <h2>Number to Win: {finalNum}</h2>
       
       <h2>Numbers</h2>
       <div>
-        <button value={num1}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : setSecondNum(e.target.value)}>{num1}</button>
-        <button value={num2}onClick={e =>firstNum==="" ? setFirstNum(e.target.value) : setSecondNum(e.target.value)}>{num2}</button>
-        <button value={num3}onClick={e =>firstNum==="" ? setFirstNum(e.target.value) : setSecondNum(e.target.value)}>{num3}</button>
-        <button value={num4}onClick={e =>firstNum==="" ? setFirstNum(e.target.value) : setSecondNum(e.target.value)}>{num4}</button>
-        <button value={num5}onClick={e =>firstNum==="" ? setFirstNum(e.target.value) : setSecondNum(e.target.value)}>{num5}</button>
+        <button value={num1}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num1}</button>
+        <button value={num2}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num2}</button>
+        <button value={num3}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num3}</button>
+        <button value={num4}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num4}</button>
+        <button value={num5}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num5}</button>
       </div>
       <h2>Operators</h2>
       <div>
@@ -67,27 +96,26 @@ function App() {
         <button value={"-"} onClick={e => setOpe(e.target.value)}>-</button>
         <button value={"/"} onClick={e => setOpe(e.target.value)}>÷</button>
         <button value={"*"} onClick={e => setOpe(e.target.value)}>*</button>
-        <button onClick={function() {
-          setCount(result(firstNum,ope,secondNum))
-          
-          }}>=</button>
+        
+        <button onClick={()=>handleCalculate()}>=</button>
+        
         <button onClick={function(){
-          setCount("")
           setFirstNum("")
           setSecondNum("")
           setOpe("")
+          setOperations([])
+
         }}>Res</button>
         
       </div>
       <div>
-        <h2>Display: {firstNum+ope+secondNum} </h2>
-        
-        <h2 >{count}</h2>
-        
-        
+        <h2>Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
+        <div>
+       
       </div>
-      <h1>Result</h1>
-      <h2></h2>
+        <h2>Operations : {displayOperation} </h2>
+      </div>
+  
       
   
      
