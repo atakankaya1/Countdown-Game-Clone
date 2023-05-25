@@ -1,31 +1,34 @@
 import { useState, useEffect } from 'react'
 
+//buttonlar basıldıktan sonra kullanılmaz hale gelsin.
+//sumbit butonu olsun-win ya da score göstersin
+//delete button u olsun
+//tam bölünmüyorsa bölmesin
+//yeni gelen numara ile işlem yapınca 
+//minus çıkıyor
 import './App.css'
 
 function App() {
-  //buttonlar basıldıktan sonra kullanılmaz hale gelsin.
+  
   const [firstNum, setFirstNum] = useState("")
   const [secondNum, setSecondNum] = useState("")
   const [ope, setOpe] = useState("")
   const [operations, setOperations] = useState([]);
-  
-
   const [finalNum, setFinalNum] = useState("")
-  const [num1, setNum1] = useState("")
-  const [num2, setNum2] = useState("")
-  const [num3, setNum3] = useState("")
-  const [num4, setNum4] = useState("")
-  const [num5, setNum5] = useState("")
+  const [nums, setNums] = useState([])
+  const [buttonStates, setButtonStates] = useState([false, false, false, false, false, false]);
 
   useEffect(() => {
-    setFinalNum(Math.floor((Math.random()+1) * 12))
-    setNum1(Math.floor((Math.random() * 10))+1)
-    setNum2(Math.floor((Math.random() * 10))+1)
-    setNum3(Math.floor((Math.random() * 10))+1)
-    setNum4(Math.floor((Math.random() * 10))+1)
-    setNum5(Math.floor((Math.random() * 10))+1)
+    setFinalNum(Math.floor((Math.random()*10) * 34))
+
+    for(let i=0; i<3;i++){
+      setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
+    }
+
+    
   }, [])
    
+
   function result(a,b,c){
     if(b === "+"){
       return +a + +c
@@ -60,20 +63,42 @@ function App() {
     
   };
 
+  
+  const initialNums = nums.map((num, index)=>(
+    <button key={index} value={num} onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)} disabled={(firstNum !== "" && ope === "") || secondNum !== ""}>{num}</button>
+  ))
+
+
   const displayOperation =  operations.map((operation, index) => (
-    <div key={index} class="operations">
+    <div key={index} className="operations">
       <p>
-        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.  count}`}
+        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
       </p>
       <button value={operation.count} onClick={e => firstNum==="" ? setFirstNum(e.  target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target. value)}>{operation.count}</button>
     </div>
   ))
 
+  function handleNumClick(e, index){
+    if(firstNum===""){
+      setFirstNum(e.target.value)
+    } else if(ope !== ""){
+      setSecondNum(e.target.value)
+    } else {
+      setFirstNum(e.target.value)
+    }
+    const newButtonStates = [...buttonStates]
+    newButtonStates[index] = true
+    setButtonStates(newButtonStates)
+  }
 
 
- 
-  
-  //console.log(operations)
+
+
+  const fourOpe = ["+","-","/","*"]
+  const fourOpeComp = fourOpe.map((op,index) => (
+  <button key={index} value={op} onClick={e => setOpe(e.target.value)}>{op}</button>)
+  )
+
   
   return (
     <>
@@ -84,21 +109,12 @@ function App() {
       
       <h2>Numbers</h2>
       <div>
-        <button value={num1}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num1}</button>
-        <button value={num2}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num2}</button>
-        <button value={num3}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num3}</button>
-        <button value={num4}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num4}</button>
-        <button value={num5}onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)}>{num5}</button>
+        {initialNums}
       </div>
       <h2>Operators</h2>
       <div>
-        <button value={"+"} onClick={e => {setOpe(e.target.value)}}>+</button>
-        <button value={"-"} onClick={e => setOpe(e.target.value)}>-</button>
-        <button value={"/"} onClick={e => setOpe(e.target.value)}>÷</button>
-        <button value={"*"} onClick={e => setOpe(e.target.value)}>*</button>
-        
+        {fourOpeComp}
         <button onClick={()=>handleCalculate()}>=</button>
-        
         <button onClick={function(){
           setFirstNum("")
           setSecondNum("")
@@ -115,10 +131,6 @@ function App() {
       </div>
         <h2>Operations : {displayOperation} </h2>
       </div>
-  
-      
-  
-     
     </>
   )
 }
