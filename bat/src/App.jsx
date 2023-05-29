@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
-//delete button u disabled buttonu active etsin
+//delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
 //tam bölünmüyorsa bölmesin
-// eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
+//eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
 
 import './App.css'
 
@@ -100,11 +100,30 @@ function App() {
   function handleDelete(){
     if(secondNum){
       setSecondNum("")
+      setButtonDisabled((prevButtonDisabled) => {
+        const newButtonDisabled = [...prevButtonDisabled];
+        const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
+        if (lastDisabledIndex !== -1) {
+          newButtonDisabled[lastDisabledIndex] = false;
+        }
+        return newButtonDisabled;
+      })
     } else if(firstNum && ope){
       setOpe("")
-    } else {
+    } else if (firstNum){
       setFirstNum("")
+      setButtonDisabled((prevButtonDisabled) => {
+        const newButtonDisabled = [...prevButtonDisabled];
+        const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
+        if (lastDisabledIndex !== -1) {
+          newButtonDisabled[lastDisabledIndex] = false;
+        }
+        return newButtonDisabled;
+      })
+    } else {
+
     }
+    
   }
 
   function handleRestart(){
