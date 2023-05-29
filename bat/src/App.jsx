@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 //delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
 //tam bölünmüyorsa bölmesin
 //eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
+//kodda 
 
 import './App.css'
 
@@ -21,7 +22,7 @@ function App() {
 
   useEffect(() => {
     setFinalNum(Math.floor((Math.random()*10) * 34))
-    for(let i=0; i<3;i++){
+    for(let i=0; i<6;i++){
       setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
     }
   }, [])
@@ -92,6 +93,7 @@ function App() {
     const finalCount = operations.slice(-1)
     console.log(finalCount[0].count)
     const score = Number(finalNum) - Number(finalCount[0].count)
+
     setScore(score)
     setDisplayScore(true)
     
@@ -157,6 +159,8 @@ function App() {
   <button key={index} value={op} onClick={e => setOpe(e.target.value)}>{op}</button>)
   )
 
+  const text = "you win!!"
+
   return (
     <>
       <h1>Bir İşlem</h1>
@@ -183,7 +187,7 @@ function App() {
       </div>
       {displayScore ?
       <div>
-      <p>Your Score is: {score}</p>
+      <p>Your Score is: {score===0 ? text : score}</p>
       </div> :
       <div>
 
