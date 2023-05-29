@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 
-//buttonlar basıldıktan sonra kullanılmaz hale gelsin.
-//sumbit butonu olsun-win ya da score göstersin
-//delete button u olsun
+//delete button u disabled buttonu active etsin
 //tam bölünmüyorsa bölmesin
-//yeni gelen numara ile işlem yapınca 
-//minus çıkıyor
+// eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
+
 import './App.css'
 
 function App() {
@@ -18,17 +16,17 @@ function App() {
   const [nums, setNums] = useState([])
   const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
   const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
+  const [score, setScore] = useState("")
+  const [displayScore, setDisplayScore] = useState(false)
 
   useEffect(() => {
     setFinalNum(Math.floor((Math.random()*10) * 34))
-
     for(let i=0; i<3;i++){
       setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
     }
-
-    
   }, [])
    
+  //functions
 
   function result(a,b,c){
     if(b === "+"){
@@ -46,10 +44,8 @@ function App() {
     }
   }
 
-
   function handleCalculate(){
     const calculatedResult  = result(firstNum,ope,secondNum)
-
     const operation = {
       firstNum,
       ope,
@@ -60,40 +56,7 @@ function App() {
     setFirstNum("")
     setOpe("")
     setSecondNum("")
-    
-    
   };
-
-  
-  const initialNums = nums.map((num, index)=>(
-    <button key={index} value={num} onClick={()=>handleNumClick(num, index)} disabled={buttonDisabled[index]}>{num}</button>
-  ))
-
-
-  const displayOperation =  operations.map((operation, index) => (
-    <div key={index} className="operations">
-      <p>
-        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
-      </p>
-      <button value={operation.count} onClick={()=>handleNewNumberClick(operation.count, index)} disabled={displayButtonDisabled[index]}>{operation.count}</button>
-    </div>
-  ))
-
-  function handleNewNumberClick(value, index){
-    if(firstNum===""){
-      setFirstNum(value)
-    } else if(ope !== ""){
-      setSecondNum(value)
-    } else {
-      setFirstNum(value)
-    }
-    setDisplayButtonDisabled((prevDisplayButtonDisabled) => {
-      const newButtonDisabled = [...prevDisplayButtonDisabled, false];
-      newButtonDisabled[index] = true;
-      return newButtonDisabled;
-    })
-
-  }
 
   function handleNumClick(value, index){
     if(firstNum===""){
@@ -109,23 +72,76 @@ function App() {
       return newButtonDisabled;
     })
   }
+  
+  function handleNewNumberClick(value, index){
+    if(firstNum===""){
+      setFirstNum(value)
+    } else if(ope !== ""){
+      setSecondNum(value)
+    } else {
+      setFirstNum(value)
+    }
+    setDisplayButtonDisabled((prevDisplayButtonDisabled) => {
+      const newButtonDisabled = [...prevDisplayButtonDisabled, false];
+      newButtonDisabled[index] = true;
+      return newButtonDisabled;
+    })
+  }
 
+  function handleAnswer(){
+    const finalCount = operations.slice(-1)
+    console.log(finalCount[0].count)
+    const score = Number(finalNum) - Number(finalCount[0].count)
+    setScore(score)
+    setDisplayScore(true)
+    
+  }
 
+  function handleDelete(){
+    if(secondNum){
+      setSecondNum("")
+    } else if(firstNum && ope){
+      setOpe("")
+    } else {
+      setFirstNum("")
+    }
+  }
 
+  function handleRestart(){
+    setFirstNum("")
+    setSecondNum("")
+    setOpe("")
+    setOperations([])
+    setButtonDisabled(Array(nums.length).fill(false))
+    setDisplayButtonDisabled([])
+    setDisplayScore(false)
+  }
+
+  //Numbers and Operation
+
+  const initialNums = nums.map((num, index)=>(
+    <button key={index} value={num} onClick={()=>handleNumClick(num, index)} disabled={buttonDisabled[index]}>{num}</button>
+  ))
+
+  const displayOperation =  operations.map((operation, index) => (
+    <div key={index} className="operations">
+      <p>
+        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
+      </p>
+      <button value={operation.count} onClick={()=>handleNewNumberClick(operation.count, index)} disabled={displayButtonDisabled[index]}>{operation.count}</button>
+    </div>
+  ))
 
   const fourOpe = ["+","-","/","*"]
+
   const fourOpeComp = fourOpe.map((op,index) => (
   <button key={index} value={op} onClick={e => setOpe(e.target.value)}>{op}</button>)
   )
 
-  
   return (
     <>
-    
       <h1>Bir İşlem</h1>
-
       <h2>Number to Win: {finalNum}</h2>
-      
       <h2>Numbers</h2>
       <div>
         {initialNums}
@@ -134,22 +150,27 @@ function App() {
       <div>
         {fourOpeComp}
         <button onClick={()=>handleCalculate()}>=</button>
-        <button onClick={function(){
-          setFirstNum("")
-          setSecondNum("")
-          setOpe("")
-          setOperations([])
-
-        }}>Res</button>
-        
+        <button onClick={()=>handleDelete()}>Del</button>
+        <button onClick={()=>handleRestart()}>Res</button>
       </div>
       <div>
         <h2>Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
         <div>
-       
       </div>
         <h2>Operations : {displayOperation} </h2>
       </div>
+      <div>
+        <button onClick={()=>handleAnswer()}>Submit Answer</button>
+      </div>
+      {displayScore ?
+      <div>
+      <p>Your Score is: {score}</p>
+      </div> :
+      <div>
+
+      </div>
+      }
+      
     </>
   )
 }
