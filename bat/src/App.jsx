@@ -16,7 +16,8 @@ function App() {
   const [operations, setOperations] = useState([]);
   const [finalNum, setFinalNum] = useState("")
   const [nums, setNums] = useState([])
-  const [buttonStates, setButtonStates] = useState([false, false, false, false, false, false]);
+  const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
+  const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
 
   useEffect(() => {
     setFinalNum(Math.floor((Math.random()*10) * 34))
@@ -65,7 +66,7 @@ function App() {
 
   
   const initialNums = nums.map((num, index)=>(
-    <button key={index} value={num} onClick={e => firstNum==="" ? setFirstNum(e.target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target.value)} disabled={(firstNum !== "" && ope === "") || secondNum !== ""}>{num}</button>
+    <button key={index} value={num} onClick={()=>handleNumClick(num, index)} disabled={buttonDisabled[index]}>{num}</button>
   ))
 
 
@@ -74,21 +75,39 @@ function App() {
       <p>
         {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
       </p>
-      <button value={operation.count} onClick={e => firstNum==="" ? setFirstNum(e.  target.value) : ope !== "" ? setSecondNum(e.target.value) : setFirstNum(e.target. value)}>{operation.count}</button>
+      <button value={operation.count} onClick={()=>handleNewNumberClick(operation.count, index)} disabled={displayButtonDisabled[index]}>{operation.count}</button>
     </div>
   ))
 
-  function handleNumClick(e, index){
+  function handleNewNumberClick(value, index){
     if(firstNum===""){
-      setFirstNum(e.target.value)
+      setFirstNum(value)
     } else if(ope !== ""){
-      setSecondNum(e.target.value)
+      setSecondNum(value)
     } else {
-      setFirstNum(e.target.value)
+      setFirstNum(value)
     }
-    const newButtonStates = [...buttonStates]
-    newButtonStates[index] = true
-    setButtonStates(newButtonStates)
+    setDisplayButtonDisabled((prevDisplayButtonDisabled) => {
+      const newButtonDisabled = [...prevDisplayButtonDisabled, false];
+      newButtonDisabled[index] = true;
+      return newButtonDisabled;
+    })
+
+  }
+
+  function handleNumClick(value, index){
+    if(firstNum===""){
+      setFirstNum(value)
+    } else if(ope !== ""){
+      setSecondNum(value)
+    } else {
+      setFirstNum(value)
+    }
+    setButtonDisabled((prevButtonDisabled) => {
+      const newButtonDisabled = [...prevButtonDisabled];
+      newButtonDisabled[index] = true;
+      return newButtonDisabled;
+    })
   }
 
 
