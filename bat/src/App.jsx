@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 
+//timer eklenmeli
 //delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
 //tam bölünmüyorsa bölmesin
 //eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
-//kodda 
+
 
 import './App.css'
 
 function App() {
   
+  const [start, setStart] = useState(true)
   const [firstNum, setFirstNum] = useState("")
   const [secondNum, setSecondNum] = useState("")
   const [ope, setOpe] = useState("")
@@ -22,7 +24,7 @@ function App() {
 
   useEffect(() => {
     setFinalNum(Math.floor((Math.random()*10) * 34))
-    for(let i=0; i<6;i++){
+    for(let i=0; i<3;i++){
       setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
     }
   }, [])
@@ -100,7 +102,8 @@ function App() {
   }
 
   function handleDelete(){
-    if(secondNum){
+    //delete'i operasyondan gelen numarayla çalıştırma problemi buradan kaynaklanıyor. delete buttonu kullandığında operasyon içinde alttan gelen bir numara varsa o değişmiyor. Önceki operasyon sonucu değişen button active oluyor.
+    if(firstNum && ope && secondNum){
       setSecondNum("")
       setButtonDisabled((prevButtonDisabled) => {
         const newButtonDisabled = [...prevButtonDisabled];
@@ -110,6 +113,8 @@ function App() {
         }
         return newButtonDisabled;
       })
+      
+      
     } else if(firstNum && ope){
       setOpe("")
     } else if (firstNum){
@@ -122,6 +127,7 @@ function App() {
         }
         return newButtonDisabled;
       })
+     
     } else {
 
     }
@@ -161,8 +167,31 @@ function App() {
 
   const text = "you win!!"
 
+  console.log(`first:${firstNum}`)
+  console.log(`ope:${ope}`)
+  console.log(`second:${secondNum}`)
+
+  //startGame Component(unused for now as Component)
+  const startGame = function startPage(){
+    return(
+      <div>
+        <p>Welcome to Bir İşlem!</p>
+        <button onClick={()=>setStart(false)}>Start Game</button>
+      </div>
+    )
+  }
+
   return (
     <>
+      
+        {start ?
+        <div>
+        <h1>Welcome to Bir İşlem!</h1>
+        <p>You will have 30 seconds to find the number when you start the game.</p>
+        <h3>When you ready, start the game!</h3>
+        <button onClick={()=>setStart(false)}>Start Game</button>
+      </div> :
+        <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
       <h2>Numbers</h2>
@@ -193,6 +222,11 @@ function App() {
 
       </div>
       }
+      </div>
+        }
+        
+      
+      
       
     </>
   )
