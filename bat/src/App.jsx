@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import Countdown from './assets/Countdown'
+
 
 //timer eklenmeli
 //delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
@@ -21,6 +23,9 @@ function App() {
   const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
   const [score, setScore] = useState("")
   const [displayScore, setDisplayScore] = useState(false)
+  
+  
+  
 
   useEffect(() => {
     setFinalNum(Math.floor((Math.random()*10) * 34))
@@ -28,6 +33,7 @@ function App() {
       setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
     }
   }, [])
+
    
   //functions
 
@@ -113,8 +119,6 @@ function App() {
         }
         return newButtonDisabled;
       })
-      
-      
     } else if(firstNum && ope){
       setOpe("")
     } else if (firstNum){
@@ -127,11 +131,9 @@ function App() {
         }
         return newButtonDisabled;
       })
-     
     } else {
 
     }
-    
   }
 
   function handleRestart(){
@@ -142,6 +144,26 @@ function App() {
     setButtonDisabled(Array(nums.length).fill(false))
     setDisplayButtonDisabled([])
     setDisplayScore(false)
+  }
+
+  function gameOver(){
+
+    setDisplayButtonDisabled(displayButtonDisabled.map(()=>true))
+    setButtonDisabled(buttonDisabled.map(()=>true))
+//en başta array falselar ile dolu değil.(false'lar ile doldurulabilir)
+    const updatedArray1 = displayButtonDisabled.map(() => true);
+    setDisplayButtonDisabled(updatedArray1);
+//hepsini disable yapmıyor ama run dev'den kaynaklı olabilir. Preview'de görmek gerekir.
+    const updatedArray2 = buttonDisabled.map(()=>true);
+    setButtonDisabled(updatedArray2)
+
+
+    
+    const finalCount = operations.slice(-1)
+    const score = Number(finalNum) - Number(finalCount[0].count)
+
+    setScore(score)
+    setDisplayScore(true)
   }
 
   //Numbers and Operation
@@ -194,6 +216,8 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
+      <Countdown initialCountdownSeconds={30} onCountdownEnd={gameOver} />
+      
       <h2>Numbers</h2>
       <div>
         {initialNums}
