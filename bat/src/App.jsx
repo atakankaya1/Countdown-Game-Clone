@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
 
 
-//timer eklenmeli
+
 //delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
 //tam bölünmüyorsa bölmesin
 //eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
+//operator yapmadan numlara bastıkça disable oluyor. Önce 1. sonra 2.ye bas, 1.numara da disable oluyor
+//res olunca
+// bütün butonları bir array içinde objeler olarak tut, value, disable button
 
 
 import './App.css'
@@ -50,6 +53,8 @@ function App() {
       return a*c
     } else {
       return (a/c).toFixed(2)
+      //tam bölünmüyorsa bölme, modu sıfır değilse alert ver
+      //isimleri düzelt
     }
   }
 
@@ -99,7 +104,7 @@ function App() {
 
   function handleAnswer(){
     const finalCount = operations.slice(-1)
-    console.log(finalCount[0].count)
+    
     const score = Number(finalNum) - Number(finalCount[0].count)
 
     setScore(score)
@@ -114,6 +119,8 @@ function App() {
       setButtonDisabled((prevButtonDisabled) => {
         const newButtonDisabled = [...prevButtonDisabled];
         const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
+        console.log("first: "+firstNum)
+        console.log("seco:"+secondNum)
         if (lastDisabledIndex !== -1) {
           newButtonDisabled[lastDisabledIndex] = false;
         }
@@ -132,7 +139,7 @@ function App() {
         return newButtonDisabled;
       })
     } else {
-
+      //buna gerek yokmuş
     }
   }
 
@@ -189,9 +196,7 @@ function App() {
 
   const text = "you win!!"
 
-  console.log(`first:${firstNum}`)
-  console.log(`ope:${ope}`)
-  console.log(`second:${secondNum}`)
+
 
   //startGame Component(unused for now as Component)
   const startGame = function startPage(){
@@ -216,7 +221,7 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={30} onCountdownEnd={gameOver} />
+      <Countdown initialCountdownSeconds={60} onCountdownEnd={gameOver} />
       
       <h2>Numbers</h2>
       <div>
