@@ -3,7 +3,6 @@ import Countdown from './assets/Countdown'
 
 
 
-//delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
 //tam bölünmüyorsa bölmesin
 //eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
 //operator yapmadan numlara bastıkça disable oluyor. Önce 1. sonra 2.ye bas, 1.numara da disable oluyor
@@ -21,70 +20,96 @@ function App() {
   const [ope, setOpe] = useState("")
   const [operations, setOperations] = useState([]);
   const [finalNum, setFinalNum] = useState("")
-  const [nums, setNums] = useState([])
+  const [nums, setNums] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
   const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
   const [score, setScore] = useState("")
   const [displayScore, setDisplayScore] = useState(false)
+  const [firstNumIndex, setFirstNumIndex] = useState()
+  const [secondNumIndex, setSecondNumIndex] = useState()
   
   
   
 
   useEffect(() => {
-    setFinalNum(Math.floor((Math.random()*10) * 34))
-    for(let i=0; i<3;i++){
-      setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
+    setFinalNum(Math.floor((Math.random() * 10) * 34));
+    const generatedNums = {};
+    for (let i = 0; i < 6; i++) {
+      generatedNums[i] = { value: Math.floor((Math.random() * 10)) + 1, isEnabled: true };
     }
-  }, [])
+    setNums(generatedNums);
+  }, []);
 
    
   //functions
 
-  function result(a,b,c){
-    if(b === "+"){
-      return +a + +c
-    }else if(b === "-"){
-      if(a <= c){
-        return c-a
-      }else{
-        return a-c
+  function result(firstNumber, operator, secondNumber) {
+    if (operator === "+") {
+      return +firstNumber + +secondNumber;
+    } else if (operator === "-") {
+      if (firstNumber <= secondNumber) {
+        return secondNumber - firstNumber;
+      } else {
+        return firstNumber - secondNumber;
       }
-    } else if (b === "*"){
-      return a*c
+    } else if (operator === "*") {
+      return firstNumber * secondNumber;
     } else {
-      return (a/c).toFixed(2)
-      //tam bölünmüyorsa bölme, modu sıfır değilse alert ver
-      //isimleri düzelt
+      if (firstNumber % secondNumber !== 0) {
+        return false;
+      } else {
+        return firstNumber / secondNumber;
+      }
     }
   }
 
-  function handleCalculate(){
-    const calculatedResult  = result(firstNum,ope,secondNum)
-    const operation = {
-      firstNum,
-      ope,
-      secondNum,
-      count: calculatedResult 
-    }
-    setOperations(prevOperations => [...prevOperations, operation])
-    setFirstNum("")
-    setOpe("")
-    setSecondNum("")
-  };
-
-  function handleNumClick(value, index){
-    if(firstNum===""){
-      setFirstNum(value)
-    } else if(ope !== ""){
-      setSecondNum(value)
+  function handleCalculate() {
+    const calculatedResult = result(firstNum, ope, secondNum);
+  
+    if (calculatedResult !== false) {
+      const operation = {
+        firstNum,
+        ope,
+        secondNum,
+        count: calculatedResult,
+      };
+      setOperations((prevOperations) => [...prevOperations, operation]);
+      setFirstNum("");
+      setOpe("");
+      setSecondNum("");
     } else {
-      setFirstNum(value)
+      setFirstNum("");
+      setOpe("");
+      setSecondNum("");
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true };
+        return updatedNums;
+      })
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true };
+        return updatedNums;
+      })
     }
-    setButtonDisabled((prevButtonDisabled) => {
-      const newButtonDisabled = [...prevButtonDisabled];
-      newButtonDisabled[index] = true;
-      return newButtonDisabled;
-    })
+  }
+
+  function handleNumClick(value, index) {
+    if (firstNum === "") {
+      setFirstNum(value)
+      setFirstNumIndex(index)
+    } else if (ope !== "") {
+      setSecondNumIndex(index)
+      setSecondNum(value);
+    } else {
+      setFirstNum(value);
+    }
+  
+    setNums((prevNums) => {
+      const updatedNums = { ...prevNums };
+      updatedNums[index] = { ...updatedNums[index], isEnabled: false };
+      return updatedNums;
+    });
   }
   
   function handleNewNumberClick(value, index){
@@ -111,7 +136,7 @@ function App() {
     setDisplayScore(true)
     
   }
-
+  /*
   function handleDelete(){
     //delete'i operasyondan gelen numarayla çalıştırma problemi buradan kaynaklanıyor. delete buttonu kullandığında operasyon içinde alttan gelen bir numara varsa o değişmiyor. Önceki operasyon sonucu değişen button active oluyor.
     if(firstNum && ope && secondNum){
@@ -142,6 +167,7 @@ function App() {
       //buna gerek yokmuş
     }
   }
+  */
 
   function handleRestart(){
     setFirstNum("")
@@ -175,9 +201,19 @@ function App() {
 
   //Numbers and Operation
 
-  const initialNums = nums.map((num, index)=>(
-    <button key={index} value={num} onClick={()=>handleNumClick(num, index)} disabled={buttonDisabled[index]}>{num}</button>
-  ))
+  const initialNums = Object.keys(nums).map((index) => {
+    const num = nums[index];
+    return (
+      <button
+        key={index}
+        value={num.value}
+        onClick={() => handleNumClick(num.value, index)}
+        disabled={!num.isEnabled}
+      >
+        {num.value}
+      </button>
+    );
+  });
 
   const displayOperation =  operations.map((operation, index) => (
     <div key={index} className="operations">
@@ -231,7 +267,7 @@ function App() {
       <div>
         {fourOpeComp}
         <button onClick={()=>handleCalculate()}>=</button>
-        <button onClick={()=>handleDelete()}>Del</button>
+        
         <button onClick={()=>handleRestart()}>Res</button>
       </div>
       <div>
