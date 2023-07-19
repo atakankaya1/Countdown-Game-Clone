@@ -5,7 +5,6 @@ import Countdown from './assets/Countdown'
 
 // eğer yapılacak başka işlem kalmadıysa sonucu göstersin.
 // countdown bittiğinde hiçbir işlem yapılmamışsa çöküyor.
-// res butonu yeni gelen numaraları kaldırmıyor.
 
 
 
