@@ -3,11 +3,9 @@ import Countdown from './assets/Countdown'
 
 
 
-//tam bölünmüyorsa bölmesin
-//eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
-//operator yapmadan numlara bastıkça disable oluyor. Önce 1. sonra 2.ye bas, 1.numara da disable oluyor
-//res olunca
-// bütün butonları bir array içinde objeler olarak tut, value, disable button
+// eğer yapılacak başka işlem kalmadıysa sonucu göstersin.
+
+
 
 
 import './App.css'
@@ -98,7 +96,17 @@ function App() {
     if (firstNum === "") {
       setFirstNum(value)
       setFirstNumIndex(index)
-    } else if (ope !== "") {
+      
+    } else if(firstNum && !ope){
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true };
+        return updatedNums;
+      })
+      setFirstNum(value)
+      setFirstNumIndex(index)
+
+    }else if (ope !== "") {
       setSecondNumIndex(index)
       setSecondNum(value);
     } else {
@@ -136,45 +144,41 @@ function App() {
     setDisplayScore(true)
     
   }
-  /*
   function handleDelete(){
-    //delete'i operasyondan gelen numarayla çalıştırma problemi buradan kaynaklanıyor. delete buttonu kullandığında operasyon içinde alttan gelen bir numara varsa o değişmiyor. Önceki operasyon sonucu değişen button active oluyor.
     if(firstNum && ope && secondNum){
-      setSecondNum("")
-      setButtonDisabled((prevButtonDisabled) => {
-        const newButtonDisabled = [...prevButtonDisabled];
-        const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
-        console.log("first: "+firstNum)
-        console.log("seco:"+secondNum)
-        if (lastDisabledIndex !== -1) {
-          newButtonDisabled[lastDisabledIndex] = false;
-        }
-        return newButtonDisabled;
+      setSecondNum("");
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true };
+        return updatedNums;
       })
+      setSecondNumIndex(null)
     } else if(firstNum && ope){
       setOpe("")
     } else if (firstNum){
-      setFirstNum("")
-      setButtonDisabled((prevButtonDisabled) => {
-        const newButtonDisabled = [...prevButtonDisabled];
-        const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
-        if (lastDisabledIndex !== -1) {
-          newButtonDisabled[lastDisabledIndex] = false;
-        }
-        return newButtonDisabled;
+      setFirstNum("");
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true };
+        return updatedNums;
       })
-    } else {
-      //buna gerek yokmuş
+      setFirstNumIndex(null)
     }
   }
-  */
 
   function handleRestart(){
     setFirstNum("")
     setSecondNum("")
     setOpe("")
     setOperations([])
-    setButtonDisabled(Array(nums.length).fill(false))
+    setNums((prevNums) => {
+      const updatedNums = { ...prevNums };
+      Object.keys(updatedNums).forEach((index) => {
+        updatedNums[index] = { ...updatedNums[index], isEnabled: true };
+      });
+      return updatedNums;
+    });
+    
     setDisplayButtonDisabled([])
     setDisplayScore(false)
   }
@@ -257,7 +261,7 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={60} onCountdownEnd={gameOver} />
+      <Countdown initialCountdownSeconds={30} onCountdownEnd={gameOver} />
       
       <h2>Numbers</h2>
       <div>
@@ -267,7 +271,7 @@ function App() {
       <div>
         {fourOpeComp}
         <button onClick={()=>handleCalculate()}>=</button>
-        
+        <button onClick={()=>handleDelete()}>Del</button>
         <button onClick={()=>handleRestart()}>Res</button>
       </div>
       <div>
