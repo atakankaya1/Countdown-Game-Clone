@@ -18,13 +18,14 @@ function App() {
   const [ope, setOpe] = useState("")
   const [operations, setOperations] = useState([]);
   const [finalNum, setFinalNum] = useState("")
-  const [nums, setNums] = useState({});
+  const [nums, setNums] = useState({})
   const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
   const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
   const [score, setScore] = useState("")
   const [displayScore, setDisplayScore] = useState(false)
   const [firstNumIndex, setFirstNumIndex] = useState()
   const [secondNumIndex, setSecondNumIndex] = useState()
+  
   
   
   
@@ -70,7 +71,14 @@ function App() {
         ope,
         secondNum,
         count: calculatedResult,
-      };
+      }
+      setNums((prevNums) => {
+        const newIndex = Object.keys(prevNums).length;
+        return {
+          ...prevNums,
+          [newIndex]: { value: calculatedResult, isEnabled: true },
+        };
+      })
       setOperations((prevOperations) => [...prevOperations, operation]);
       setFirstNum("");
       setOpe("");
@@ -123,8 +131,10 @@ function App() {
   function handleNewNumberClick(value, index){
     if(firstNum===""){
       setFirstNum(value)
+      
     } else if(ope !== ""){
       setSecondNum(value)
+      
     } else {
       setFirstNum(value)
     }
@@ -133,6 +143,8 @@ function App() {
       newButtonDisabled[index] = true;
       return newButtonDisabled;
     })
+    
+   
   }
 
   function handleAnswer(){
@@ -205,6 +217,7 @@ function App() {
 
   //Numbers and Operation
 
+  
   const initialNums = Object.keys(nums).map((index) => {
     const num = nums[index];
     return (
@@ -224,7 +237,6 @@ function App() {
       <p>
         {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
       </p>
-      <button value={operation.count} onClick={()=>handleNewNumberClick(operation.count, index)} disabled={displayButtonDisabled[index]}>{operation.count}</button>
     </div>
   ))
 
