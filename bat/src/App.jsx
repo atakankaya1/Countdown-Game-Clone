@@ -4,6 +4,8 @@ import Countdown from './assets/Countdown'
 
 
 // eğer yapılacak başka işlem kalmadıysa sonucu göstersin.
+// countdown bittiğinde hiçbir işlem yapılmamışsa çöküyor.
+// res butonu yeni gelen numaraları kaldırmıyor.
 
 
 
@@ -19,6 +21,7 @@ function App() {
   const [operations, setOperations] = useState([]);
   const [finalNum, setFinalNum] = useState("")
   const [nums, setNums] = useState({})
+  const [originalNums, setOriginalNums] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
   const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
   const [score, setScore] = useState("")
@@ -36,7 +39,8 @@ function App() {
     for (let i = 0; i < 6; i++) {
       generatedNums[i] = { value: Math.floor((Math.random() * 10)) + 1, isEnabled: true };
     }
-    setNums(generatedNums);
+    setNums(generatedNums)
+    setOriginalNums(generatedNums)
   }, []);
 
    
@@ -104,7 +108,7 @@ function App() {
     if (firstNum === "") {
       setFirstNum(value)
       setFirstNumIndex(index)
-      
+      setSecondNum("")
     } else if(firstNum && !ope){
       setNums((prevNums) => {
         const updatedNums = { ...prevNums };
@@ -113,7 +117,7 @@ function App() {
       })
       setFirstNum(value)
       setFirstNumIndex(index)
-
+      setSecondNum("")
     }else if (ope !== "") {
       setSecondNumIndex(index)
       setSecondNum(value);
@@ -183,13 +187,7 @@ function App() {
     setSecondNum("")
     setOpe("")
     setOperations([])
-    setNums((prevNums) => {
-      const updatedNums = { ...prevNums };
-      Object.keys(updatedNums).forEach((index) => {
-        updatedNums[index] = { ...updatedNums[index], isEnabled: true };
-      });
-      return updatedNums;
-    });
+    setNums(originalNums);
     
     setDisplayButtonDisabled([])
     setDisplayScore(false)
@@ -273,7 +271,7 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={30} onCountdownEnd={gameOver} />
+      <Countdown initialCountdownSeconds={60} onCountdownEnd={gameOver} />
       
       <h2>Numbers</h2>
       <div>
