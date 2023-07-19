@@ -164,19 +164,19 @@ function App() {
     setDisplayScore(false)
   }
   
-  function handleAnswer(){
-    const finalCount = operations.slice(-1)
-    if(finalCount){
-      const score = Number(finalNum) - Number(finalCount[0].count)
-      setScore(Math.abs(score))
-      setDisplayScore(true)
+  function handleAnswer() {
+    const finalCount = operations.slice(-1);
+  
+    if (finalCount.length > 0) {
+      const score = Number(finalNum) - Number(finalCount[0].count);
+      setScore(Math.abs(score));
     } else {
-      //buraya bir şeyler yap
+      // If no operations are made, set the score to the maximum possible value
+      const maxScore = Number(finalNum);
+      setScore(maxScore);
     }
-    
-    
-    
-    
+  
+    setDisplayScore(true);
   }
 
 
@@ -239,7 +239,7 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
+      <Countdown initialCountdownSeconds={5} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
       
       <h2>Numbers</h2>
       <div>
