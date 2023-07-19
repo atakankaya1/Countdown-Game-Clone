@@ -3,7 +3,7 @@ import Countdown from './assets/Countdown'
 
 
 
-// eğer yapılacak başka işlem kalmadıysa sonucu göstersin.
+
 // countdown bittiğinde hiçbir işlem yapılmamışsa çöküyor.
 
 
@@ -21,9 +21,8 @@ function App() {
   const [finalNum, setFinalNum] = useState("")
   const [nums, setNums] = useState({})
   const [originalNums, setOriginalNums] = useState({});
-  const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
-  const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
-  const [score, setScore] = useState("")
+
+  const [score, setScore] = useState()
   const [displayScore, setDisplayScore] = useState(false)
   const [firstNumIndex, setFirstNumIndex] = useState()
   const [secondNumIndex, setSecondNumIndex] = useState()
@@ -130,35 +129,8 @@ function App() {
       return updatedNums;
     });
   }
-  
-  function handleNewNumberClick(value, index){
-    if(firstNum===""){
-      setFirstNum(value)
-      
-    } else if(ope !== ""){
-      setSecondNum(value)
-      
-    } else {
-      setFirstNum(value)
-    }
-    setDisplayButtonDisabled((prevDisplayButtonDisabled) => {
-      const newButtonDisabled = [...prevDisplayButtonDisabled, false];
-      newButtonDisabled[index] = true;
-      return newButtonDisabled;
-    })
-    
-   
-  }
+ 
 
-  function handleAnswer(){
-    const finalCount = operations.slice(-1)
-    
-    const score = Number(finalNum) - Number(finalCount[0].count)
-
-    setScore(score)
-    setDisplayScore(true)
-    
-  }
   function handleDelete(){
     if(firstNum && ope && secondNum){
       setSecondNum("");
@@ -191,26 +163,23 @@ function App() {
     setDisplayButtonDisabled([])
     setDisplayScore(false)
   }
-
-  function gameOver(){
-
-    setDisplayButtonDisabled(displayButtonDisabled.map(()=>true))
-    setButtonDisabled(buttonDisabled.map(()=>true))
-//en başta array falselar ile dolu değil.(false'lar ile doldurulabilir)
-    const updatedArray1 = displayButtonDisabled.map(() => true);
-    setDisplayButtonDisabled(updatedArray1);
-//hepsini disable yapmıyor ama run dev'den kaynaklı olabilir. Preview'de görmek gerekir.
-    const updatedArray2 = buttonDisabled.map(()=>true);
-    setButtonDisabled(updatedArray2)
-
-
-    
+  
+  function handleAnswer(){
     const finalCount = operations.slice(-1)
-    const score = Number(finalNum) - Number(finalCount[0].count)
-
-    setScore(score)
-    setDisplayScore(true)
+    if(finalCount){
+      const score = Number(finalNum) - Number(finalCount[0].count)
+      setScore(Math.abs(score))
+      setDisplayScore(true)
+    } else {
+      //buraya bir şeyler yap
+    }
+    
+    
+    
+    
   }
+
+
 
   //Numbers and Operation
 
@@ -243,7 +212,7 @@ function App() {
   <button key={index} value={op} onClick={e => setOpe(e.target.value)}>{op}</button>)
   )
 
-  const text = "you win!!"
+  const textWin = "You Win!!"
 
 
 
@@ -270,7 +239,7 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={60} onCountdownEnd={gameOver} />
+      <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
       
       <h2>Numbers</h2>
       <div>
@@ -294,7 +263,7 @@ function App() {
       </div>
       {displayScore ?
       <div>
-      <p>Your Score is: {score===0 ? text : score}</p>
+      <p>{score===0 ? textWin : `You are close to the target ${score} points`}</p>
       </div> :
       <div>
 
