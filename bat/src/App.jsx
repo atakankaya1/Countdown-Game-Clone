@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
+const BASE_HOST = "http://localhost:8080/api/game"
 
 
 
-
-// countdown bittiğinde hiçbir işlem yapılmamışsa çöküyor.
+// sanırım her şey bitti, css kısmına bakmak gerekiyor.
 
 
 
@@ -21,27 +21,52 @@ function App() {
   const [finalNum, setFinalNum] = useState("")
   const [nums, setNums] = useState({})
   const [originalNums, setOriginalNums] = useState({});
-
   const [score, setScore] = useState()
   const [displayScore, setDisplayScore] = useState(false)
   const [firstNumIndex, setFirstNumIndex] = useState()
   const [secondNumIndex, setSecondNumIndex] = useState()
   
   
-  
-  
+  //fetch Request
+  useEffect(()=>{
+    fetch(BASE_HOST)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data)
+      setFinalNum(data.target)
+      const requestedNumbers = data.numbers.map(function(n){
+        return {value: n,
+                isEnabled: true}
+      })
+      setNums(requestedNumbers)
 
-  useEffect(() => {
-    setFinalNum(Math.floor((Math.random() * 10) * 34));
-    const generatedNums = {};
-    for (let i = 0; i < 6; i++) {
-      generatedNums[i] = { value: Math.floor((Math.random() * 10)) + 1, isEnabled: true };
-    }
-    setNums(generatedNums)
-    setOriginalNums(generatedNums)
-  }, []);
-
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
+  }, [])
    
+  /*
+  Object { target: 343, numbers: (6) […], bestSolution: (5) […], isSolutionExact: true, difference: 0 }
+​
+bestSolution: Array(5) [ "2 + 6 = 8", "9 + 8 = 17", "9 + 36 = 45", … ]
+0: "2 + 6 = 8"
+1: "9 + 8 = 17"
+2: "9 + 36 = 45"
+3: "8 * 45 = 360"
+4: "360 - 17 = 343"
+length: 5
+<prototype>: Array []
+difference: 0
+isSolutionExact: true
+  */
+
+
   //functions
 
   function result(firstNumber, operator, secondNumber) {
@@ -66,7 +91,7 @@ function App() {
 
   function handleCalculate() {
     const calculatedResult = result(firstNum, ope, secondNum);
-  
+  if(firstNum){
     if (calculatedResult !== false) {
       const operation = {
         firstNum,
@@ -100,6 +125,8 @@ function App() {
         return updatedNums;
       })
     }
+  }
+    
   }
 
   function handleNumClick(value, index) {
@@ -239,7 +266,8 @@ function App() {
         <div>
       <h1>Bir İşlem</h1>
       <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={5} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
+
+      <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
       
       <h2>Numbers</h2>
       <div>
