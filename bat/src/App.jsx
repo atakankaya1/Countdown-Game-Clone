@@ -5,6 +5,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 // sanırım her şey bitti, css kısmına bakmak gerekiyor.
+// isSolutionExact ve difference meseleleri var.
 
 
 
@@ -25,6 +26,8 @@ function App() {
   const [displayScore, setDisplayScore] = useState(false)
   const [firstNumIndex, setFirstNumIndex] = useState()
   const [secondNumIndex, setSecondNumIndex] = useState()
+  const [solution, setSolution] = useState([])
+  const [solutionShow, setSolutionShow] = useState(false)
   
   
   //fetch Request
@@ -44,6 +47,7 @@ function App() {
                 isEnabled: true}
       })
       setNums(requestedNumbers)
+      setSolution(data.bestSolution)
 
     })
     .catch((error) => {
@@ -206,6 +210,10 @@ isSolutionExact: true
     setDisplayScore(true);
   }
 
+  function showSolution(){
+    setSolutionShow(!solutionShow)
+  }
+
 
 
   //Numbers and Operation
@@ -240,6 +248,12 @@ isSolutionExact: true
   )
 
   const textWin = "You Win!!"
+
+  const bestSolution = solution.map(function(sol){
+    return <p>{sol}</p>
+  }
+  )
+  
 
 
 
@@ -292,6 +306,11 @@ isSolutionExact: true
       {displayScore ?
       <div>
       <p>{score===0 ? textWin : `You are close to the target ${score} points`}</p>
+      <button onClick={()=>showSolution()}>Show Solution</button>
+      {solutionShow ? 
+      <p>{bestSolution}</p> :
+      <div></div>
+      }
       </div> :
       <div>
 
