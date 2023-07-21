@@ -5,6 +5,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 // sanırım her şey bitti, css kısmına bakmak gerekiyor.
+// sıfırı bir sayıya bölünce saçmalıyor.
 // isSolutionExact ve difference meseleleri var.
 
 
@@ -18,16 +19,17 @@ function App() {
   const [firstNum, setFirstNum] = useState("")
   const [secondNum, setSecondNum] = useState("")
   const [ope, setOpe] = useState("")
-  const [operations, setOperations] = useState([]);
+  const [operations, setOperations] = useState([])
   const [finalNum, setFinalNum] = useState("")
   const [nums, setNums] = useState({})
-  const [originalNums, setOriginalNums] = useState({});
+  const [originalNums, setOriginalNums] = useState({})
   const [score, setScore] = useState()
   const [displayScore, setDisplayScore] = useState(false)
   const [firstNumIndex, setFirstNumIndex] = useState()
   const [secondNumIndex, setSecondNumIndex] = useState()
   const [solution, setSolution] = useState([])
   const [solutionShow, setSolutionShow] = useState(false)
+  const [exactSolution, setExactSolution] = useState(true)
   
   
   //fetch Request
@@ -35,9 +37,9 @@ function App() {
     fetch(BASE_HOST)
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok')
       }
-      return response.json();
+      return response.json()
     })
     .then((data) => {
       console.log(data)
@@ -47,54 +49,42 @@ function App() {
                 isEnabled: true}
       })
       setNums(requestedNumbers)
+      setOriginalNums(requestedNumbers)
       setSolution(data.bestSolution)
+      if(!data.isSolutionExact){
+        setExactSolution(!exactSolution)
+      }
 
     })
     .catch((error) => {
-      console.error('Error fetching data:', error);
-    });
-  }, [])
+      console.error('Error fetching data:', error)
+    })
+  }, [exactSolution])
    
-  /*
-  Object { target: 343, numbers: (6) […], bestSolution: (5) […], isSolutionExact: true, difference: 0 }
-​
-bestSolution: Array(5) [ "2 + 6 = 8", "9 + 8 = 17", "9 + 36 = 45", … ]
-0: "2 + 6 = 8"
-1: "9 + 8 = 17"
-2: "9 + 36 = 45"
-3: "8 * 45 = 360"
-4: "360 - 17 = 343"
-length: 5
-<prototype>: Array []
-difference: 0
-isSolutionExact: true
-  */
-
-
   //functions
 
   function result(firstNumber, operator, secondNumber) {
     if (operator === "+") {
-      return +firstNumber + +secondNumber;
+      return +firstNumber + +secondNumber
     } else if (operator === "-") {
       if (firstNumber <= secondNumber) {
-        return secondNumber - firstNumber;
+        return secondNumber - firstNumber
       } else {
-        return firstNumber - secondNumber;
+        return firstNumber - secondNumber
       }
     } else if (operator === "*") {
-      return firstNumber * secondNumber;
+      return firstNumber * secondNumber
     } else {
       if (firstNumber % secondNumber !== 0) {
-        return false;
+        return false
       } else {
-        return firstNumber / secondNumber;
+        return firstNumber / secondNumber
       }
     }
   }
 
   function handleCalculate() {
-    const calculatedResult = result(firstNum, ope, secondNum);
+    const calculatedResult = result(firstNum, ope, secondNum)
   if(firstNum){
     if (calculatedResult !== false) {
       const operation = {
@@ -104,29 +94,29 @@ isSolutionExact: true
         count: calculatedResult,
       }
       setNums((prevNums) => {
-        const newIndex = Object.keys(prevNums).length;
+        const newIndex = Object.keys(prevNums).length
         return {
           ...prevNums,
           [newIndex]: { value: calculatedResult, isEnabled: true },
-        };
+        }
       })
-      setOperations((prevOperations) => [...prevOperations, operation]);
-      setFirstNum("");
-      setOpe("");
-      setSecondNum("");
+      setOperations((prevOperations) => [...prevOperations, operation])
+      setFirstNum("")
+      setOpe("")
+      setSecondNum("")
     } else {
-      setFirstNum("");
-      setOpe("");
-      setSecondNum("");
+      setFirstNum("")
+      setOpe("")
+      setSecondNum("")
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true };
-        return updatedNums;
+        const updatedNums = { ...prevNums }
+        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true }
+        return updatedNums
       })
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true };
-        return updatedNums;
+        const updatedNums = { ...prevNums }
+        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true }
+        return updatedNums
       })
     }
   }
@@ -140,45 +130,45 @@ isSolutionExact: true
       setSecondNum("")
     } else if(firstNum && !ope){
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true };
-        return updatedNums;
+        const updatedNums = { ...prevNums }
+        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true }
+        return updatedNums
       })
       setFirstNum(value)
       setFirstNumIndex(index)
       setSecondNum("")
     }else if (ope !== "") {
       setSecondNumIndex(index)
-      setSecondNum(value);
+      setSecondNum(value)
     } else {
-      setFirstNum(value);
+      setFirstNum(value)
     }
   
     setNums((prevNums) => {
-      const updatedNums = { ...prevNums };
-      updatedNums[index] = { ...updatedNums[index], isEnabled: false };
-      return updatedNums;
-    });
+      const updatedNums = { ...prevNums }
+      updatedNums[index] = { ...updatedNums[index], isEnabled: false }
+      return updatedNums
+    })
   }
  
 
   function handleDelete(){
     if(firstNum && ope && secondNum){
-      setSecondNum("");
+      setSecondNum("")
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true };
-        return updatedNums;
+        const updatedNums = { ...prevNums }
+        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true }
+        return updatedNums
       })
       setSecondNumIndex(null)
     } else if(firstNum && ope){
       setOpe("")
     } else if (firstNum){
-      setFirstNum("");
+      setFirstNum("")
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true };
-        return updatedNums;
+        const updatedNums = { ...prevNums }
+        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true }
+        return updatedNums
       })
       setFirstNumIndex(null)
     }
@@ -189,25 +179,25 @@ isSolutionExact: true
     setSecondNum("")
     setOpe("")
     setOperations([])
-    setNums(originalNums);
+    setNums(originalNums)
     
-    setDisplayButtonDisabled([])
+    
     setDisplayScore(false)
   }
   
   function handleAnswer() {
-    const finalCount = operations.slice(-1);
+    const finalCount = operations.slice(-1)
   
     if (finalCount.length > 0) {
-      const score = Number(finalNum) - Number(finalCount[0].count);
-      setScore(Math.abs(score));
+      const score = Number(finalNum) - Number(finalCount[0].count)
+      setScore(Math.abs(score))
     } else {
       // If no operations are made, set the score to the maximum possible value
-      const maxScore = Number(finalNum);
-      setScore(maxScore);
+      const maxScore = Number(finalNum)
+      setScore(maxScore)
     }
   
-    setDisplayScore(true);
+    setDisplayScore(true)
   }
 
   function showSolution(){
@@ -220,7 +210,7 @@ isSolutionExact: true
 
   
   const initialNums = Object.keys(nums).map((index) => {
-    const num = nums[index];
+    const num = nums[index]
     return (
       <button
         key={index}
@@ -230,8 +220,8 @@ isSolutionExact: true
       >
         {num.value}
       </button>
-    );
-  });
+    )
+  })
 
   const displayOperation =  operations.map((operation, index) => (
     <div key={index} className="operations">
@@ -249,8 +239,8 @@ isSolutionExact: true
 
   const textWin = "You Win!!"
 
-  const bestSolution = solution.map(function(sol){
-    return <p>{sol}</p>
+  const bestSolution = solution.map(function(sol, index){
+    return <p key={index}>{sol}</p>
   }
   )
   
