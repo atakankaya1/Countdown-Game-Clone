@@ -1,7 +1,7 @@
 #root {
-  max-width: 1280px;
+  min-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0.5rem;
   text-align: center;
   border: red solid 2px;
 }
@@ -35,11 +35,86 @@
 }
 
 .card {
-  padding: 2em;
+  margin-top: 0px;
+  padding: 0em;
+
+}
+.card h3{
+  margin-top: 0px;
+  padding-top: 1px;
 }
 
 .read-the-docs {
   color: #888;
+}
+.target{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.countdown{
+  color: red;
+}
+
+.allOpe{
+  border: yellow solid 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
+  padding-top: 0em;
+}
+.allOpe h2{
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+.numsOpe{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.numButtons button {
+  margin: 2px;
+}
+
+.numberButtons{
+  color: aqua;
+  background-color: brown;
+}
+
+.operators button{
+  margin: 2px;
+}
+.operator{
+  color: cornflowerblue;
+  background-color: darkseagreen;
+}
+
+.operation{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border: red solid 1px;
+  line-height: 2px;
+  padding: 0px;
+}
+.equal{
+  background-color: darkgreen;
+}
+.delete{
+  background-color: crimson;
+  
+}
+.restart{
+  background-color: gold;
+
+}
+
+.currentOperation{
+  color: greenyellow;
 }
 
 .operations{
@@ -47,5 +122,18 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  color: burlywood;
   
 }
+
+.submit{
+  border: blanchedalmond solid 1px;
+  padding: 0.2em;
+}
+
+.solution{
+  color: red;
+  border: red solid 1px;
+}
+
+

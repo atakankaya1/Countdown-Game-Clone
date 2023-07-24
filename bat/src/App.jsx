@@ -3,10 +3,8 @@ import Countdown from './assets/Countdown'
 const BASE_HOST = "http://localhost:8080/api/game"
 
 
-
-// sanırım her şey bitti, css kısmına bakmak gerekiyor.
 // sıfırı bir sayıya bölünce saçmalıyor.
-// isSolutionExact ve difference meseleleri var.
+
 
 
 
@@ -15,7 +13,7 @@ import './App.css'
 
 function App() {
   
-  const [start, setStart] = useState(true)
+  const [start, setStart] = useState(false)
   const [firstNum, setFirstNum] = useState("")
   const [secondNum, setSecondNum] = useState("")
   const [ope, setOpe] = useState("")
@@ -217,6 +215,7 @@ function App() {
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
         disabled={!num.isEnabled}
+        className='numberButtons'
       >
         {num.value}
       </button>
@@ -224,7 +223,7 @@ function App() {
   })
 
   const displayOperation =  operations.map((operation, index) => (
-    <div key={index} className="operations">
+    <div key={index} className="operation">
       <p>
         {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
       </p>
@@ -234,78 +233,99 @@ function App() {
   const fourOpe = ["+","-","/","*"]
 
   const fourOpeComp = fourOpe.map((op,index) => (
-  <button key={index} value={op} onClick={e => setOpe(e.target.value)}>{op}</button>)
+  <button 
+    key={index} 
+    value={op} 
+    onClick={e => setOpe(e.target.value)}
+    className='operator'
+    >
+      {op}
+    </button>)
   )
 
   const textWin = "You Win!!"
 
   const bestSolution = solution.map(function(sol, index){
     return <p key={index}>{sol}</p>
-  }
-  )
-  
+  })
 
-
-
-  //startGame Component(unused for now as Component)
-  const startGame = function startPage(){
-    return(
+  const startGame = (
       <div>
-        <p>Welcome to Bir İşlem!</p>
-        <button onClick={()=>setStart(false)}>Start Game</button>
+        <h1>Welcome to Bir İşlem!</h1>
+        <p>You will have 30 seconds to find the number when you start the game.</p>
+        <h3>When you ready, start the game!</h3>
+        <button onClick={()=>setStart(true)}>Start Game</button>
       </div>
     )
-  }
+  
 
   return (
     <>
       
-        {start ?
-        <div>
-        <h1>Welcome to Bir İşlem!</h1>
-        <p>You will have 30 seconds to find the number when you start the game.</p>
-        <h3>When you ready, start the game!</h3>
-        <button onClick={()=>setStart(false)}>Start Game</button>
-      </div> :
-        <div>
-      <h1>Bir İşlem</h1>
-      <h2>Number to Win: {finalNum}</h2>
+      {!start ?
+      startGame :
+      <div className='card'>
+        <h3>Bir İşlem</h3>
+        <div className='target'>
+          <h2>Number to Win: {finalNum}</h2>
+          <div className='countdown'>
+            <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
+          </div>
+        </div>
+        <div className='allOpe'>
+          <div className='numsOpe'>
+            <div>
+              <h2>Numbers</h2>
+              <div className='numButtons'>
+                {initialNums}
+              </div>
+            </div>
+            <div>
+              <h2>Operators</h2>
+              <div className='operators'>
+                {fourOpeComp}
+                <button className="equal" onClick={()=>handleCalculate()}>=</button>
+                <button className="delete" onClick={()=>handleDelete()}>Del</button>
+                <button className="restart" onClick={()=>handleRestart()}>Res</button>
+              </div>
+            </div>
+          
+          </div>
+          <div>
+            <div>
+              <h2 className='currentOperation'>Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
+            </div>
+            <div className='operations'>
+              <h2>Operations : {displayOperation} </h2>
+            </div>
+          </div>
+        </div>
+        
+        <div className='submit'>
+          <div>
+            <button onClick={()=>handleAnswer()}>Submit Answer</button>
+          </div>
+          {displayScore ?
+          <div>
+            <p>{score===0 ? textWin : `You are close to the target ${score} points`}</p>
+            <button onClick={()=>showSolution()}>Show Solution</button>
+            {solutionShow ? 
+            <div className='solution'>
+              <p>{bestSolution}</p>
+            </div>
+             :
+            <div></div>
+            }
+          </div> :
+          <div>
 
-      <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
-      
-      <h2>Numbers</h2>
-      <div>
-        {initialNums}
-      </div>
-      <h2>Operators</h2>
-      <div>
-        {fourOpeComp}
-        <button onClick={()=>handleCalculate()}>=</button>
-        <button onClick={()=>handleDelete()}>Del</button>
-        <button onClick={()=>handleRestart()}>Res</button>
-      </div>
-      <div>
-        <h2>Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
-        <div>
-      </div>
-        <h2>Operations : {displayOperation} </h2>
-      </div>
-      <div>
-        <button onClick={()=>handleAnswer()}>Submit Answer</button>
-      </div>
-      {displayScore ?
-      <div>
-      <p>{score===0 ? textWin : `You are close to the target ${score} points`}</p>
-      <button onClick={()=>showSolution()}>Show Solution</button>
-      {solutionShow ? 
-      <p>{bestSolution}</p> :
-      <div></div>
-      }
-      </div> :
-      <div>
+          </div>
+          }
+        </div>
+        
+        
 
-      </div>
-      }
+       
       </div>
         }
         
