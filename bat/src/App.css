@@ -48,6 +48,15 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+.numButtons{
+  display: grid;
+  grid-template-columns: repeat(6, auto); 
+  gap: 5px; 
+  justify-content: center; 
+  align-content: center;
+}
+
 .numButtons button {
   margin: 2px;
 }
@@ -57,9 +66,17 @@
   background-color: #6ca965;
 }
 
+.numberButtons:hover{
+  background-color: #568750;
+}
+
 .disabled-button{
   color: black;
   background-color: #c8535b;
+}
+
+.disabled-button:hover{
+  background-color: #a04248;
 }
 
 .operators button{
@@ -69,6 +86,11 @@
 .operator{
   color: black;
   background-color: #8cc5cd;
+  
+}
+
+.operator:hover{
+  background-color: #709da4;
 }
 
 .operation{
@@ -81,16 +103,29 @@
 .equal{
   background-color: #bf7bca;
   color: black;
-}
-.delete{
-  background-color: #ac000c;
-  color: black;
   
 }
+
+.equal:hover{
+  background-color: #9862a1;
+}
+
+.delete{
+  background-color: #ac000c;
+  color: white;
+}
+
+.delete:hover{
+  background-color: #890009;
+}
+
 .restart{
   background-color: black;
   color: white;
+}
 
+.restart:hover{
+  background-color: #4c4c4c;
 }
 
 .currentOperation{

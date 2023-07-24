@@ -5,6 +5,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 // submit dedikten sonra numaralara basılmasın, display bölümünde göstermesin
 // sıfırı bir sayıya bölünce saçmalıyor.
 // current operation yapılırken işlem sonucu gösterilebilir.
+// ilk altı numaradan sonra gelenler onların altına gelsin.
 
 
 
