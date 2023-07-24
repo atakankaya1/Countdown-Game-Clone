@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
 const BASE_HOST = "http://localhost:8080/api/game"
 
-
+// submit dedikten sonra numaralara basılmasın, display bölümünde göstermesin
 // sıfırı bir sayıya bölünce saçmalıyor.
+// current operation yapılırken işlem sonucu gösterilebilir.
 
 
 
@@ -215,7 +216,7 @@ function App() {
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
         disabled={!num.isEnabled}
-        className='numberButtons'
+        className={num.isEnabled ? 'numberButtons' : 'disabled-button'}
       >
         {num.value}
       </button>
@@ -285,15 +286,17 @@ function App() {
               <div className='operators'>
                 {fourOpeComp}
                 <button className="equal" onClick={()=>handleCalculate()}>=</button>
-                <button className="delete" onClick={()=>handleDelete()}>Del</button>
-                <button className="restart" onClick={()=>handleRestart()}>Res</button>
+                <div>
+                  <button className="delete" onClick={()=>handleDelete()}>Del</button>
+                  <button className="restart" onClick={()=>handleRestart()}>Res</button>
+                </div>
               </div>
             </div>
           
           </div>
           <div>
-            <div>
-              <h2 className='currentOperation'>Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
+            <div className='currentOperation'>
+              <h2 >Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
             </div>
             <div className='operations'>
               <h2>Operations : {displayOperation} </h2>
