@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
+import logo from "./assets/countdown-log.png"
+
 const BASE_HOST = "http://localhost:8080/api/game"
 
 
@@ -7,6 +9,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt
 // operations ve solution altında çok boşluk var
 // show solution bölümü kendini tekar ediyor
+// üst kısım düzelsin
 
 
 import './App.css'
@@ -274,7 +277,9 @@ function App() {
       {!start ?
       startGame :
       <div className='card'>
-        <h3>Countdown</h3>
+        <div className='logo'>
+          <img src={logo} alt="Countdown" />
+        </div>
         <div className='indicators'>
           <h2 className='target'>Number to Win: {finalNum}</h2>
           

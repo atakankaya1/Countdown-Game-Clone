@@ -7,7 +7,9 @@
   color: black;
 }
 
-
+.logo img{
+  width: 10%;
+}
 .card {
   margin-top: 0px;
   padding: 0em;
