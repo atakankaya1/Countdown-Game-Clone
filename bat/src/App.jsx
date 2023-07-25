@@ -2,13 +2,8 @@ import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// submit dedikten sonra numaralara basılmasın, display bölümünde göstermesin
+
 // sıfırı bir sayıya bölünce saçmalıyor.
-// current operation yapılırken işlem sonucu gösterilebilir.
-// ilk altı numaradan sonra gelenler onların altına gelsin.
-
-
-
 
 
 import './App.css'
@@ -30,6 +25,7 @@ function App() {
   const [solution, setSolution] = useState([])
   const [solutionShow, setSolutionShow] = useState(false)
   const [exactSolution, setExactSolution] = useState(true)
+  const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
   
   
   //fetch Request
@@ -198,6 +194,8 @@ function App() {
     }
   
     setDisplayScore(true)
+    setAreButtonsDisabled(true)
+    
   }
 
   function showSolution(){
@@ -216,7 +214,7 @@ function App() {
         key={index}
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
-        disabled={!num.isEnabled}
+        disabled={!num.isEnabled || areButtonsDisabled}
         className={num.isEnabled ? 'numberButtons' : 'disabled-button'}
       >
         {num.value}
@@ -240,6 +238,7 @@ function App() {
     value={op} 
     onClick={e => setOpe(e.target.value)}
     className='operator'
+    disabled={areButtonsDisabled}
     >
       {op}
     </button>)
@@ -286,10 +285,19 @@ function App() {
               <h2>Operators</h2>
               <div className='operators'>
                 {fourOpeComp}
-                <button className="equal" onClick={()=>handleCalculate()}>=</button>
+                <button 
+                  className="equal"
+                  onClick={()=>handleCalculate()}
+                  disabled={areButtonsDisabled}>=</button>
                 <div>
-                  <button className="delete" onClick={()=>handleDelete()}>Del</button>
-                  <button className="restart" onClick={()=>handleRestart()}>Res</button>
+                  <button
+                    className="delete" 
+                    onClick={()=>handleDelete()}
+                    disabled={areButtonsDisabled}>Del</button>
+                  <button 
+                    className="restart" 
+                    onClick={()=>handleRestart()}
+                    disabled={areButtonsDisabled}>Res</button>
                 </div>
               </div>
             </div>
