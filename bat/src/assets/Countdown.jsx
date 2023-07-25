@@ -24,7 +24,7 @@ const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit }) =>
 
   return (
     <div>
-      <p>Countdown: {countdown}</p>
+      <p>Time Left: {countdown}</p>
     </div>
   );
 };

@@ -4,10 +4,9 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 // sıfırı bir sayıya bölünce saçmalıyor.
-// submit butonu numsOpe nin altına gelebilir.
-//ekrana tam sığıması lazım.
-
-// show solution bölümü kendini tekar ediyor.
+// küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt
+// operations ve solution altında çok boşluk var
+// show solution bölümü kendini tekar ediyor
 
 
 import './App.css'
@@ -254,7 +253,9 @@ function App() {
   const textWin = "You Win!!"
 
   const bestSolution = solution.map(function(sol, index){
-    return <p key={index}>{sol}</p>
+    return <div key={index} className='everySol'> 
+              <p >{sol}</p>
+          </div>
   })
 
   const startGame = (
@@ -273,13 +274,17 @@ function App() {
       {!start ?
       startGame :
       <div className='card'>
-        <h3>Bir İşlem</h3>
-        <div className='target'>
-          <h2>Number to Win: {finalNum}</h2>
+        <h3>Countdown</h3>
+        <div className='indicators'>
+          <h2 className='target'>Number to Win: {finalNum}</h2>
+          
           <div className='countdown'>
             <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
           </div>
         </div>
+        {displayScore ? 
+          <p className='score'>{score===0 ? textWin : `You are close to the target ${score} points`}</p>:
+          <p></p>}
         <div className='allOpe'>
           <div className='numsOpe'>
             <div>
@@ -308,7 +313,12 @@ function App() {
                 </div>
               </div>
             </div>
-          
+            <div className='answer'>
+                    {!displayScore ?
+                    <button onClick={()=>handleAnswer()}>Submit Answer</button>:
+                    <button onClick={()=>showSolution()}>Show Solution</button>
+                    }
+            </div>
           </div>
           <div className='rightOpe'>
             <div className='currentOperation'>
@@ -338,24 +348,6 @@ function App() {
             </div>
           </div>
         </div>
-        
-        <div className='submit'>
-          <div>
-            <button onClick={()=>handleAnswer()}>Submit Answer</button>
-          </div>
-          {displayScore ?
-          <div>
-            <p>{score===0 ? textWin : `You are close to the target ${score} points`}</p>
-            <button onClick={()=>showSolution()}>Show Solution</button>
-          </div> :
-          <div>
-          </div>
-          }
-        </div>
-        
-        
-
-       
       </div>
         }
         
