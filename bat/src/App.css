@@ -95,7 +95,7 @@
 
 .operation{
   margin-top: 0px;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
   border: red solid 1px;
   line-height: 0px;
   padding: 0px;
@@ -129,6 +129,11 @@
   background-color: #4c4c4c;
 }
 
+.rightOpe{
+  display: flex;
+  flex-direction: column;
+}
+
 .currentOperation{
   color: black;
   background-color: #dda980;
@@ -138,18 +143,29 @@
   border-radius: 10%;
   height: 3em;
   width: 8em;
+  align-self: center;
 }
 
 .operations{
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   color: black;
   background-color: #b28a82;
   border: black solid 1px;
   border-radius: 5%;
   min-height: 233px;
+  width: 140px;
+  font-weight: bold;
+  padding: 0px;
+
+}
+
+.operations h3{
+  align-self: center;
+  margin-top: 0px;
+  padding-top: 0px;
 }
 
 .submit{
@@ -158,8 +174,17 @@
 }
 
 .solution{
-  color: red;
-  border: red solid 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  color: black;
+  background-color: #b28a82;
+  border: black solid 1px;
+  border-radius: 5%;
+  min-height: 233px;
+  width: 140px;
+  font-weight: bold;
 }
 
 .endOpe{

@@ -4,7 +4,9 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 // sıfırı bir sayıya bölünce saçmalıyor.
-// show solution operations'ın yanına alındı ama düzeltilmesi gerekiyor.
+// submit butonu numsOpe nin altına gelebilir.
+//ekrana tam sığıması lazım.
+
 // show solution bölümü kendini tekar ediyor.
 
 
@@ -308,29 +310,32 @@ function App() {
             </div>
           
           </div>
-          <div>
+          <div className='rightOpe'>
             <div className='currentOperation'>
               <h2 >{ope ? firstNum+ope+secondNum : firstNum} </h2>
             </div>
             <div className='endOpe'>
               {!areButtonsDisabled ?
                 <div className='operations'>
-                  <h2>Operations : {displayOperation} </h2>
+                  <h3>Operations :</h3>
+                  <p> {displayOperation} </p>
                 </div> : !solutionShow ?
                 <div className='operations'>
-                  <h2>Operations : {displayOperation} </h2>
+                  <h3>Operations :</h3>
+                  <p> {displayOperation} </p>
                 </div> : 
                 <>
                 <div className='operations'>
-                  <h2>Operations : {displayOperation} </h2>
+                  <h3>Operations :</h3>
+                  <p> {displayOperation} </p>
                 </div>
                 <div className='solution'>
-                  <p>{bestSolution}</p>
+                  <h3>Solution:</h3>
+                  <p> {bestSolution}</p>
                 </div>
                 </>
               }
             </div>
-            
           </div>
         </div>
         
@@ -342,16 +347,8 @@ function App() {
           <div>
             <p>{score===0 ? textWin : `You are close to the target ${score} points`}</p>
             <button onClick={()=>showSolution()}>Show Solution</button>
-            {solutionShow ? 
-            <div className='solution'>
-              <p>{bestSolution}</p>
-            </div>
-             :
-            <div></div>
-            }
           </div> :
           <div>
-
           </div>
           }
         </div>
