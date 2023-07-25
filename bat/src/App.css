@@ -97,8 +97,9 @@
   margin-top: 0px;
   margin-bottom: 0px;
   border: red solid 1px;
-  line-height: 2px;
+  line-height: 0px;
   padding: 0px;
+  font-size: 18px;
 }
 .equal{
   background-color: #bf7bca;
@@ -130,9 +131,13 @@
 
 .currentOperation{
   color: black;
-  background-color: #95938b;
+  background-color: #dda980;
   margin: 2em;
-  padding: 0.5em;
+  padding: 0px;
+  border: #dda980 solid 1px;
+  border-radius: 10%;
+  height: 3em;
+  width: 8em;
 }
 
 .operations{
@@ -141,10 +146,10 @@
   justify-content: space-around;
   align-items: center;
   color: black;
-  background-color: #645b29;
+  background-color: #b28a82;
   border: black solid 1px;
   border-radius: 5%;
-  min-height: 5em;
+  min-height: 233px;
 }
 
 .submit{
@@ -155,6 +160,13 @@
 .solution{
   color: red;
   border: red solid 1px;
+}
+
+.endOpe{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 1em;
 }
 
 

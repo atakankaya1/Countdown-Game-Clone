@@ -4,6 +4,8 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 // sıfırı bir sayıya bölünce saçmalıyor.
+// show solution operations'ın yanına alındı ama düzeltilmesi gerekiyor.
+// show solution bölümü kendini tekar ediyor.
 
 
 import './App.css'
@@ -195,6 +197,9 @@ function App() {
   
     setDisplayScore(true)
     setAreButtonsDisabled(true)
+    setFirstNum("")
+    setOpe("")
+    setSecondNum("")
     
   }
 
@@ -305,11 +310,27 @@ function App() {
           </div>
           <div>
             <div className='currentOperation'>
-              <h2 >Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
+              <h2 >{ope ? firstNum+ope+secondNum : firstNum} </h2>
             </div>
-            <div className='operations'>
-              <h2>Operations : {displayOperation} </h2>
+            <div className='endOpe'>
+              {!areButtonsDisabled ?
+                <div className='operations'>
+                  <h2>Operations : {displayOperation} </h2>
+                </div> : !solutionShow ?
+                <div className='operations'>
+                  <h2>Operations : {displayOperation} </h2>
+                </div> : 
+                <>
+                <div className='operations'>
+                  <h2>Operations : {displayOperation} </h2>
+                </div>
+                <div className='solution'>
+                  <p>{bestSolution}</p>
+                </div>
+                </>
+              }
             </div>
+            
           </div>
         </div>
         
