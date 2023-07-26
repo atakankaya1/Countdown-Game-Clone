@@ -6,10 +6,11 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 // sıfırı bir sayıya bölünce saçmalıyor.
-// küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt
+// küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // operations ve solution altında çok boşluk var
 // show solution bölümü kendini tekar ediyor
 // üst kısım düzelsin
+// dark mode
 
 
 import './App.css'
@@ -70,7 +71,8 @@ function App() {
       return +firstNumber + +secondNumber
     } else if (operator === "-") {
       if (firstNumber <= secondNumber) {
-        return secondNumber - firstNumber
+        
+        return  secondNumber - firstNumber
       } else {
         return firstNumber - secondNumber
       }
@@ -284,7 +286,7 @@ function App() {
           <h2 className='target'>Number to Win: {finalNum}</h2>
           
           <div className='countdown'>
-            <Countdown initialCountdownSeconds={60} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
+            <Countdown initialCountdownSeconds={3000} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
           </div>
         </div>
         {displayScore ? 
