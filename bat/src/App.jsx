@@ -33,6 +33,8 @@ function App() {
   const [solutionShow, setSolutionShow] = useState(false)
   const [exactSolution, setExactSolution] = useState(true)
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
+  const [firstSelectedIndex, setFirstSelectedIndex] = useState()
+  const [secondSelectedIndex, setSecondSelectedIndex] = useState()
   
   
   //fetch Request
@@ -98,10 +100,17 @@ function App() {
         count: calculatedResult,
       }
       setNums((prevNums) => {
-        const newIndex = Object.keys(prevNums).length
+        const newIndex = secondNumIndex
         return {
           ...prevNums,
-          [newIndex]: { value: calculatedResult, isEnabled: true },
+          [secondNumIndex]: { value: calculatedResult, isEnabled: true },
+        }
+      })
+      setNums((prevNums) => {
+        const newIndex = firstNumIndex
+        return {
+          ...prevNums,
+          [firstNumIndex]: { value: 0, isEnabled: true },
         }
       })
       setOperations((prevOperations) => [...prevOperations, operation])
@@ -228,7 +237,7 @@ function App() {
         disabled={!num.isEnabled || areButtonsDisabled}
         className={num.isEnabled ? 'numberButtons' : 'disabled-button'}
       >
-        {num.value}
+        {num.value == 0 ? "" : num.value}
       </button>
     )
   })
