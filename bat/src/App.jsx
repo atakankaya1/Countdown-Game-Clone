@@ -4,7 +4,7 @@ import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// UNDO eklenmesi lazım
+// UNDO bir önceki num operasyonunu getiriyor ve getirdiğinde ilk num disabled şeklinde oluyor.
 // sıfırı bir sayıya bölünce saçmalıyor.
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // operations ve solution altında çok boşluk var
@@ -34,6 +34,9 @@ function App() {
   const [exactSolution, setExactSolution] = useState(true)
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
   const [showResult, setShowResult] = useState(false);
+  const [previousOperations, setPreviousOperations] = useState([])
+  const [previousNums, SetPreviousNums] = useState({})
+  
   
   
   //fetch Request
@@ -111,6 +114,8 @@ function App() {
         }
       })
       setOperations((prevOperations) => [...prevOperations, operation])
+      setPreviousOperations((prev) => [...prev, {...operation}])
+      SetPreviousNums({...nums})
       setFirstNum("")
       setOpe("")
       setSecondNum("")
@@ -172,6 +177,15 @@ function App() {
     }
   }, [secondNum, ope, showResult]);
   
+  function handleUndo() {
+    if (previousOperations.length > 0) {
+      setOperations((prevOperations) => prevOperations.slice(0, -1));
+      setNums({ ...previousNums });
+      setPreviousOperations((prevOperations) => prevOperations.slice(0, -1));
+    }
+
+
+  }
  
 
   function handleDelete(){
@@ -323,6 +337,10 @@ function App() {
               <div className='operators'>
                 {fourOpeComp}
                 <div>
+                <button
+                    className="delete" 
+                    onClick={()=>handleUndo()}
+                    disabled={areButtonsDisabled}>Undo</button>
                   <button
                     className="delete" 
                     onClick={()=>handleDelete()}
