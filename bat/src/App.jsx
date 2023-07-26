@@ -4,7 +4,7 @@ import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-
+// UNDO eklenmesi lazım
 // sıfırı bir sayıya bölünce saçmalıyor.
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // operations ve solution altında çok boşluk var
@@ -33,8 +33,7 @@ function App() {
   const [solutionShow, setSolutionShow] = useState(false)
   const [exactSolution, setExactSolution] = useState(true)
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
-  const [firstSelectedIndex, setFirstSelectedIndex] = useState()
-  const [secondSelectedIndex, setSecondSelectedIndex] = useState()
+  const [showResult, setShowResult] = useState(false);
   
   
   //fetch Request
@@ -100,14 +99,12 @@ function App() {
         count: calculatedResult,
       }
       setNums((prevNums) => {
-        const newIndex = secondNumIndex
         return {
           ...prevNums,
           [secondNumIndex]: { value: calculatedResult, isEnabled: true },
         }
       })
       setNums((prevNums) => {
-        const newIndex = firstNumIndex
         return {
           ...prevNums,
           [firstNumIndex]: { value: 0, isEnabled: true },
@@ -138,31 +135,43 @@ function App() {
 
   function handleNumClick(value, index) {
     if (firstNum === "") {
-      setFirstNum(value)
-      setFirstNumIndex(index)
-      setSecondNum("")
-    } else if(firstNum && !ope){
+      setFirstNum(value);
+      setFirstNumIndex(index);
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums }
-        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true }
-        return updatedNums
-      })
-      setFirstNum(value)
-      setFirstNumIndex(index)
-      setSecondNum("")
-    }else if (ope !== "") {
-      setSecondNumIndex(index)
-      setSecondNum(value)
-    } else {
-      setFirstNum(value)
+        const updatedNums = { ...prevNums };
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false };
+        return updatedNums;
+      });
+    } else if (firstNum && !ope) {
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[firstNumIndex] = {
+          ...updatedNums[firstNumIndex],
+          isEnabled: true,
+        };
+        return updatedNums;
+      });
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums };
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false };
+        return updatedNums;
+      });
+      setFirstNum(value);
+      setFirstNumIndex(index);
+      setSecondNum("");
+      setShowResult(false); // Reset showResult when selecting a new first number
+    } else if (ope) {
+      setSecondNum(value);
+      setSecondNumIndex(index);
+      setShowResult(true); // Show the result on the second number button
     }
-  
-    setNums((prevNums) => {
-      const updatedNums = { ...prevNums }
-      updatedNums[index] = { ...updatedNums[index], isEnabled: false }
-      return updatedNums
-    })
   }
+  useEffect(() => {
+    if (firstNum && ope && secondNum && showResult) {
+      handleCalculate();
+    }
+  }, [secondNum, ope, showResult]);
+  
  
 
   function handleDelete(){
@@ -313,10 +322,6 @@ function App() {
               <h2>Operators</h2>
               <div className='operators'>
                 {fourOpeComp}
-                <button 
-                  className="equal"
-                  onClick={()=>handleCalculate()}
-                  disabled={areButtonsDisabled}>=</button>
                 <div>
                   <button
                     className="delete" 
