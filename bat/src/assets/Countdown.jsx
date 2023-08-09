@@ -23,9 +23,9 @@ const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit }) =>
   }, [countdown, answerSubmit, onCountdownEnd]);
 
   return (
-    <div>
-      <p>Time Left: {countdown}</p>
-    </div>
+    <>
+      <p className="time-num" id="2:27">{countdown}</p>
+    </>
   );
 };
 

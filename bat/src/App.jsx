@@ -11,6 +11,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 // show solution bölümü kendini tekar ediyor
 // üst kısım düzelsin
 // dark mode
+// operations ve solution'ı sonradan göstersin
 
 
 import './App.css'
@@ -36,39 +37,47 @@ function App() {
   const [showResult, setShowResult] = useState(false);
   const [previousOperations, setPreviousOperations] = useState([])
   const [previousNums, SetPreviousNums] = useState({})
+  const [selectedMode, setSelectedMode] = useState("normal")
   
   
   
   //fetch Request
-  useEffect(()=>{
-    fetch(BASE_HOST)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      return response.json()
-    })
-    .then((data) => {
-      console.log(data)
-      setFinalNum(data.target)
-      const requestedNumbers = data.numbers.map(function(n){
-        return {value: n,
-                isEnabled: true}
-      })
-      setNums(requestedNumbers)
-      setOriginalNums(requestedNumbers)
-      setSolution(data.bestSolution)
-      if(!data.isSolutionExact){
-        setExactSolution(!exactSolution)
-      }
-
-    })
-    .catch((error) => {
-      console.error('Error fetching data:', error)
-    })
-  }, [exactSolution])
+  useEffect(() => {
+    if (start) {
+      const fetchUrl = selectedMode === "easy" ? `${BASE_HOST}/easy` : BASE_HOST;
+  
+      fetch(fetchUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          setFinalNum(data.target);
+          const requestedNumbers = data.numbers.map((n) => ({
+            value: n,
+            isEnabled: true,
+          }));
+          setNums(requestedNumbers);
+          setOriginalNums(requestedNumbers);
+          setSolution(data.bestSolution);
+          if (!data.isSolutionExact) {
+            setExactSolution(!exactSolution);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  }, [start, selectedMode, exactSolution]);
    
   //functions
+
+  function handleModeChange(mode) {
+    setSelectedMode(mode);
+  }
 
   function result(firstNumber, operator, secondNumber) {
     if (operator === "+") {
@@ -258,7 +267,7 @@ function App() {
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
         disabled={!num.isEnabled || areButtonsDisabled}
-        className={num.isEnabled ? 'numberButtons' : 'disabled-button'}
+        className="num-box1"
       >
         {num.value == 0 ? "" : num.value}
       </button>
@@ -280,7 +289,7 @@ function App() {
     key={index} 
     value={op} 
     onClick={e => setOpe(e.target.value)}
-    className='operator'
+    className='add'
     disabled={areButtonsDisabled}
     >
       {op}
@@ -298,101 +307,79 @@ function App() {
   const startGame = (
       <div>
         <h1>Welcome to Bir İşlem!</h1>
-        <p>You will have 30 seconds to find the number when you start the game.</p>
-        <h3>When you ready, start the game!</h3>
-        <button onClick={()=>setStart(true)}>Start Game</button>
+          <p>You will have 30 seconds to find the number when you start the game.</p>
+          <h3>When you're ready, select a mode:</h3>
+          <button onClick={() => { setStart(true); setSelectedMode("normal"); }}>
+            Normal Mode
+          </button>
+          <button onClick={() => { setStart(true); setSelectedMode("easy"); }}>
+            Easy Mode
+          </button>
       </div>
     )
-  
+
+  const modeSelection = (
+    <>
+      <button onClick={() => handleModeChange("normal")}>Normal Mode</button>
+      <button onClick={() => handleModeChange("easy")}>Easy Mode</button>
+    </>
+  )
+    
+    
+  //<button onClick={() => handleModeChange("normal")}>Normal Mode</button>
+//<button onClick={() => handleModeChange("easy")}>Easy Mode</button>
 
   return (
     <>
       
       {!start ?
       startGame :
-      <div className='card'>
-        <div className='logo'>
-          <img src={logo} alt="Countdown" />
-        </div>
-        <div className='indicators'>
-          <h2 className='target'>Number to Win: {finalNum}</h2>
-          
-          <div className='countdown'>
-            <Countdown initialCountdownSeconds={3000} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
-          </div>
-        </div>
-        {displayScore ? 
-          <p className='score'>{score===0 ? textWin : `You are close to the target ${score} points`}</p>:
-          <p></p>}
-        <div className='allOpe'>
-          <div className='numsOpe'>
-            <div>
-              <h2>Numbers</h2>
-              <div className='numButtons'>
-                {initialNums}
+      <div class="main" id="105:21">
+        <div class="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
+          <div class="main-display" id="103:20">
+            <img class="logo" src={logo} id="1:2"/>
+            <div class="main-display-nums" id="103:5">
+              <div class="best" id="103:2">
+                <div class="best-main" id="2:14"></div>
+                <div class="best-minor" id="2:15"></div>
+                <p class="best-text" id="2:16">YOUR BEST</p>
+                <p class="best-num" id="2:28">220</p>
+              </div>
+              <div class="target" id="103:3">
+                <div class="target-main" id="2:4"></div>
+                <div class="target-minor" id="2:6"></div>
+                <p class="target-text" id="2:7">TARGET</p>
+                <p class="target-num" id="2:26">{finalNum}</p>
+              </div>
+              <div class="time" id="103:4">
+                <div class="time-main" id="2:17"></div>
+                <div class="time-minor" id="2:18"></div>
+                <p class="time-text" id="2:19">TIME</p>
+                <Countdown initialCountdownSeconds={3000} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
               </div>
             </div>
-            <div>
-              <h2>Operators</h2>
-              <div className='operators'>
-                {fourOpeComp}
-                <div>
-                <button
-                    className="delete" 
-                    onClick={()=>handleUndo()}
-                    disabled={areButtonsDisabled}>Undo</button>
-                  <button
-                    className="delete" 
-                    onClick={()=>handleDelete()}
-                    disabled={areButtonsDisabled}>Del</button>
-                  <button 
-                    className="restart" 
-                    onClick={()=>handleRestart()}
-                    disabled={areButtonsDisabled}>Res</button>
-                </div>
-              </div>
-            </div>
-            <div className='answer'>
-                    {!displayScore ?
-                    <button onClick={()=>handleAnswer()}>Submit Answer</button>:
-                    <button onClick={()=>showSolution()}>Show Solution</button>
-                    }
-            </div>
           </div>
-          <div className='rightOpe'>
-            <div className='currentOperation'>
-              <h2 >{ope ? firstNum+ope+secondNum : firstNum} </h2>
-            </div>
-            <div className='endOpe'>
-              {!areButtonsDisabled ?
-                <div className='operations'>
-                  <h3>Operations :</h3>
-                  <p> {displayOperation} </p>
-                </div> : !solutionShow ?
-                <div className='operations'>
-                  <h3>Operations :</h3>
-                  <p> {displayOperation} </p>
-                </div> : 
-                <>
-                <div className='operations'>
-                  <h3>Operations :</h3>
-                  <p> {displayOperation} </p>
-                </div>
-                <div className='solution'>
-                  <h3>Solution:</h3>
-                  <p> {bestSolution}</p>
-                </div>
-                </>
-              }
-            </div>
+          <div class="numbers" id="103:12">
+            {initialNums}
           </div>
+        </div>
+        <div class="operators" id="103:19">
+          <button 
+            className="restart" 
+            onClick={()=>handleRestart()}
+            disabled={areButtonsDisabled}>
+          Res
+          </button>
+          {fourOpeComp}
+          <button 
+            className="delete" 
+            onClick={()=>handleDelete()} 
+            disabled={areButtonsDisabled}>
+          Del
+          </button>
         </div>
       </div>
         }
-        
-      
-      
-      
     </>
   )
 }
