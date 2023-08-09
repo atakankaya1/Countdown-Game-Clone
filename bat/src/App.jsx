@@ -4,14 +4,24 @@ import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
+// UNDO butonu ekle
+// sayıların tek tek animasyonla gelmesini sağla, countdown ona göre başlasın
+// dizaynı düzelt
+// background color için bir div ve class ekle
+// sayıya ulaşınca oyunu bitir
+// tek sayı kalınca best score'a kaydet (bitmediyse)
+// (optional) kullanıcı zaman limitini kendi belirlesin
+// oyun bitince showSolution ve your solution
+// dark mode
+
 // UNDO bir önceki num operasyonunu getiriyor ve getirdiğinde ilk num disabled şeklinde oluyor.
+
 // sıfırı bir sayıya bölünce saçmalıyor.
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
-// operations ve solution altında çok boşluk var
+// üstteki not için: ya da işlemi yapma ve bütün butonlar bir süreliğine kırmızı yansın.
 // show solution bölümü kendini tekar ediyor
-// üst kısım düzelsin
 // dark mode
-// operations ve solution'ı sonradan göstersin
+
 
 
 import './App.css'
