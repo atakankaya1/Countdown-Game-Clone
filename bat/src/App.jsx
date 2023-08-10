@@ -75,12 +75,20 @@ function App() {
             delay: (index+1)*1000,
             show:false
           }));
+
+          const requestedNumbersRes = data.numbers.map((n, index) => ({
+            value: n,
+            isEnabled: true,
+            delay: 0,
+            show:true
+          }));
+
            
           setTimeout(() => {
             setFinalNumCheck(true)
           }, 7000)
           setNums(requestedNumbers);
-          setOriginalNums(requestedNumbers);
+          setOriginalNums(requestedNumbersRes);
           setSolution(data.bestSolution);
           if (!data.isSolutionExact) {
             setExactSolution(!exactSolution);
@@ -242,11 +250,12 @@ function App() {
   }
 
   function handleRestart(){
+   setNums(originalNums)
     setFirstNum("")
     setSecondNum("")
     setOpe("")
     setOperations([])
-    setNums(originalNums)
+   
     
     
     setDisplayScore(false)
