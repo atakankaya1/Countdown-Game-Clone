@@ -6,7 +6,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 // UNDO butonu ekle
 // sayıların tek tek animasyonla gelmesini sağla, countdown ona göre başlasın
-// dizaynı düzelt
+
 // background color için bir div ve class ekle
 // sayıya ulaşınca oyunu bitir
 // tek sayı kalınca best score'a kaydet (bitmediyse)
@@ -277,7 +277,7 @@ function App() {
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
         disabled={!num.isEnabled || areButtonsDisabled}
-        className="num-box1"
+        className={num.isEnabled ? 'num-box' : 'num-box-disabled'}
       >
         {num.value == 0 ? "" : num.value}
       </button>
@@ -380,7 +380,9 @@ function App() {
             disabled={areButtonsDisabled}>
           Res
           </button>
-          {fourOpeComp}
+          <div class="ope-together">
+            {fourOpeComp}
+          </div>
           <button 
             className="delete" 
             onClick={()=>handleDelete()} 
