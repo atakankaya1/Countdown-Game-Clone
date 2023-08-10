@@ -155,6 +155,7 @@
             white-space: nowrap;
             width: 9.1rem;
           }
+
         
         .time {
           flex-shrink: 0;
@@ -236,6 +237,7 @@
         margin-right: 2.5rem;
         white-space: nowrap;
         width: 8rem;
+        
       }
       .num-box:hover{
         background-color: greenyellow;
@@ -262,7 +264,6 @@
       .num-box-disabled:hover{
         background-color: #a04248;
       }
-    
   .operators {
     align-items: center;
     justify-content: space-around;

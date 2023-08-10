@@ -34,6 +34,7 @@ function App() {
   const [ope, setOpe] = useState("")
   const [operations, setOperations] = useState([])
   const [finalNum, setFinalNum] = useState("")
+  const [finalNumCheck, setFinalNumCheck] = useState(false)
   const [nums, setNums] = useState({})
   const [originalNums, setOriginalNums] = useState({})
   const [score, setScore] = useState()
@@ -48,6 +49,7 @@ function App() {
   const [previousOperations, setPreviousOperations] = useState([])
   const [previousNums, SetPreviousNums] = useState({})
   const [selectedMode, setSelectedMode] = useState("normal")
+
   
   
   
@@ -61,21 +63,29 @@ function App() {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
+          
           return response.json();
         })
         .then((data) => {
           console.log(data);
           setFinalNum(data.target);
-          const requestedNumbers = data.numbers.map((n) => ({
+          const requestedNumbers = data.numbers.map((n, index) => ({
             value: n,
             isEnabled: true,
+            delay: (index+1)*1000,
+            show:false
           }));
+           
+          setTimeout(() => {
+            setFinalNumCheck(true)
+          }, 7000)
           setNums(requestedNumbers);
           setOriginalNums(requestedNumbers);
           setSolution(data.bestSolution);
           if (!data.isSolutionExact) {
             setExactSolution(!exactSolution);
           }
+         
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
@@ -84,6 +94,8 @@ function App() {
   }, [start, selectedMode, exactSolution]);
    
   //functions
+
+  console.log(nums)
 
   function handleModeChange(mode) {
     setSelectedMode(mode);
@@ -163,7 +175,7 @@ function App() {
       setFirstNumIndex(index);
       setNums((prevNums) => {
         const updatedNums = { ...prevNums };
-        updatedNums[index] = { ...updatedNums[index], isEnabled: false };
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false};
         return updatedNums;
       });
     } else if (firstNum && !ope) {
@@ -270,19 +282,33 @@ function App() {
 
   
   const initialNums = Object.keys(nums).map((index) => {
-    const num = nums[index]
+    const num = nums[index];
+    
+    let classNames = num.isEnabled ? 'num-box' : 'num-box-disabled'
+  
+
+    setTimeout(() => {
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums }
+        updatedNums[index] = { ...updatedNums[index], show:true }
+        return updatedNums
+      })
+    }, num.delay)
+    
+
     return (
       <button
         key={index}
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
         disabled={!num.isEnabled || areButtonsDisabled}
-        className={num.isEnabled ? 'num-box' : 'num-box-disabled'}
+        className={classNames}
       >
-        {num.value == 0 ? "" : num.value}
+        {num.value === 0 ? '' : num.show ? num.value : "?"}
       </button>
-    )
-  })
+    );
+  });
+
 
   const displayOperation =  operations.map((operation, index) => (
     <div key={index} className="operation">
@@ -328,12 +354,17 @@ function App() {
       </div>
     )
 
+  
   const modeSelection = (
     <>
       <button onClick={() => handleModeChange("normal")}>Normal Mode</button>
       <button onClick={() => handleModeChange("easy")}>Easy Mode</button>
     </>
   )
+
+ 
+
+  
     
     
   //<button onClick={() => handleModeChange("normal")}>Normal Mode</button>
@@ -344,43 +375,43 @@ function App() {
       
       {!start ?
       startGame :
-      <div class="main" id="105:21">
-        <div class="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
-          <div class="main-display" id="103:20">
-            <img class="logo" src={logo} id="1:2"/>
-            <div class="main-display-nums" id="103:5">
-              <div class="best" id="103:2">
-                <div class="best-main" id="2:14"></div>
-                <div class="best-minor" id="2:15"></div>
-                <p class="best-text" id="2:16">YOUR BEST</p>
-                <p class="best-num" id="2:28">220</p>
+      <div className="main" id="105:21">
+        <div className="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
+          <div className="main-display" id="103:20">
+            <img className="logo" src={logo} id="1:2"/>
+            <div className="main-display-nums" id="103:5">
+              <div className="best" id="103:2">
+                <div className="best-main" id="2:14"></div>
+                <div className="best-minor" id="2:15"></div>
+                <p className="best-text" id="2:16">YOUR BEST</p>
+                <p className="best-num" id="2:28">220</p>
               </div>
-              <div class="target" id="103:3">
-                <div class="target-main" id="2:4"></div>
-                <div class="target-minor" id="2:6"></div>
-                <p class="target-text" id="2:7">TARGET</p>
-                <p class="target-num" id="2:26">{finalNum}</p>
+              <div className="target" id="103:3">
+                <div className="target-main" id="2:4"></div>
+                <div className="target-minor" id="2:6"></div>
+                <p className="target-text" id="2:7">TARGET</p>
+                <p className="target-num" id="2:26">{finalNumCheck ? finalNum : "???"}</p>
               </div>
-              <div class="time" id="103:4">
-                <div class="time-main" id="2:17"></div>
-                <div class="time-minor" id="2:18"></div>
-                <p class="time-text" id="2:19">TIME</p>
-                <Countdown initialCountdownSeconds={3000} onCountdownEnd={handleAnswer} answerSubmit={displayScore} />
+              <div className="time" id="103:4">
+                <div className="time-main" id="2:17"></div>
+                <div className="time-minor" id="2:18"></div>
+                <p className="time-text" id="2:19">TIME</p>
+                <Countdown initialCountdownSeconds={3000} onCountdownEnd={handleAnswer} answerSubmit={displayScore} start={finalNumCheck} />
               </div>
             </div>
           </div>
-          <div class="numbers" id="103:12">
+          <div className="numbers" id="103:12">
             {initialNums}
           </div>
         </div>
-        <div class="operators" id="103:19">
+        <div className="operators" id="103:19">
           <button 
             className="restart" 
             onClick={()=>handleRestart()}
             disabled={areButtonsDisabled}>
           Res
           </button>
-          <div class="ope-together">
+          <div className="ope-together">
             {fourOpeComp}
           </div>
           <button 

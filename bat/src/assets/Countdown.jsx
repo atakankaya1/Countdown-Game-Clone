@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
-const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit }) => {
+const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit, start }) => {
   const [countdown, setCountdown] = useState(initialCountdownSeconds);
   const [isRunning, setIsRunning] = useState(true);
 
   useEffect(() => {
     // Decrease the countdown by 1 every second
     const timer = setInterval(() => {
-      if (isRunning && countdown > 0) {
+      if (isRunning && countdown && start > 0) {
         setCountdown((prevCountdown) => prevCountdown - 1);
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isRunning, countdown]);
+  }, [isRunning, countdown, start]);
 
   useEffect(() => {
     if (countdown === 0 || answerSubmit === true) {
