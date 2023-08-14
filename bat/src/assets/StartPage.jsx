@@ -1,6 +1,7 @@
 import React from 'react';
 
 function StartGame({ onStartGame, duration }) {
+    //a
   return (
     <div>
       <h1>Welcome to Bir İşlem!</h1>

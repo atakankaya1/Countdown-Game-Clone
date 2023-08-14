@@ -9,7 +9,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 // giriş ekranı css
 // final score css
-// (optional) kullanıcı zaman limitini kendi belirlesin (custom mode gibi)
+//c
 
 
 // background color için bir div ve class ekle
