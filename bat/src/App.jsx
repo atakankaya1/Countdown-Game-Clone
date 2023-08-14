@@ -4,23 +4,20 @@ import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// sayılar soru işaretliyken basılmasın. target gelmeden basılmasın?
 
-
-// background color için bir div ve class ekle
 // sayıya ulaşınca oyunu bitir
 // tek sayı kalınca best score'a kaydet (bitmediyse)
+
 // (optional) kullanıcı zaman limitini kendi belirlesin
+
+// background color için bir div ve class ekle
 // oyun bitince showSolution ve your solution
 // dark mode
 
-// UNDO bir önceki num operasyonunu getiriyor ve getirdiğinde ilk num disabled şeklinde oluyor.
 
-// sıfırı bir sayıya bölünce saçmalıyor.
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // üstteki not için: ya da işlemi yapma ve bütün butonlar bir süreliğine kırmızı yansın.
-// show solution bölümü kendini tekar ediyor
-// dark mode
+
 
 
 
@@ -322,7 +319,7 @@ function App() {
         key={index}
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
-        disabled={!num.isEnabled || areButtonsDisabled}
+        disabled={!num.isEnabled || areButtonsDisabled || !finalNumCheck}
         className={num.value === 0 ? `${classNames} num-box-noCursor` : classNames}
       >
         {num.value === 0 ? '' : num.show ? num.value : "?"}
