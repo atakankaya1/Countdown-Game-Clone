@@ -263,6 +263,10 @@
       }
       .num-box-disabled:hover{
         background-color: #a04248;
+        
+      }
+      .num-box-noCursor:hover{
+        cursor: not-allowed;
       }
   .operators {
     align-items: center;

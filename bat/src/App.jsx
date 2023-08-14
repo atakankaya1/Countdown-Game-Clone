@@ -4,8 +4,8 @@ import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// UNDO butonu ekle
-// sayıların tek tek animasyonla gelmesini sağla
+// sayılar soru işaretliyken basılmasın. target gelmeden basılmasın?
+
 
 // background color için bir div ve class ekle
 // sayıya ulaşınca oyunu bitir
@@ -193,7 +193,7 @@ function App() {
   }
 
   function handleNumClick(value, index) {
-    if (firstNum === "") {
+    if (firstNum === "" && value != 0) {
       setFirstNum(value);
       setFirstNumIndex(index);
       setNums((prevNums) => {
@@ -201,7 +201,7 @@ function App() {
         updatedNums[index] = { ...updatedNums[index], isEnabled: false};
         return updatedNums;
       });
-    } else if (firstNum && !ope) {
+    } else if (firstNum && !ope && value != 0) {
       setNums((prevNums) => {
         const updatedNums = { ...prevNums };
         updatedNums[firstNumIndex] = {
@@ -219,7 +219,7 @@ function App() {
       setFirstNumIndex(index);
       setSecondNum("");
       setShowResult(false); // Reset showResult when selecting a new first number
-    } else if (ope) {
+    } else if (ope && value != 0) {
       setSecondNum(value);
       setSecondNumIndex(index);
       setShowResult(true); // Show the result on the second number button
@@ -323,7 +323,7 @@ function App() {
         value={num.value}
         onClick={() => handleNumClick(num.value, index)}
         disabled={!num.isEnabled || areButtonsDisabled}
-        className={classNames}
+        className={num.value === 0 ? `${classNames} num-box-noCursor` : classNames}
       >
         {num.value === 0 ? '' : num.show ? num.value : "?"}
       </button>
