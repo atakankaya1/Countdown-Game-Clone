@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
+import StartGame from "./assets/StartPage"
 import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
@@ -49,6 +50,10 @@ function App() {
   const [selectedMode, setSelectedMode] = useState("normal")
   const [numHistory, setNumHistory] = useState([])
   const [best, setBest] = useState()
+  const [seconds, SetSeconds] = useState(30)
+
+
+ 
 
   
   
@@ -385,7 +390,14 @@ function App() {
               <p >{sol}</p>
           </div>
   })
-
+  function handleStartGame(mode) {
+    setSelectedMode(mode);
+    setStart(true);
+    
+  }
+  function handleStartSeconds(duration){
+    SetSeconds(duration)
+  }
   const startGame = (
       <div>
         <h1>Welcome to Bir İşlem!</h1>
@@ -421,7 +433,7 @@ function App() {
     <>
       
       {!start ?
-      startGame :
+       <StartGame onStartGame={handleStartGame} duration={handleStartSeconds} /> :
       <div className="main" id="105:21">
         <div className="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
           <div className="main-display" id="103:20">
@@ -443,7 +455,7 @@ function App() {
                 <div className="time-main" id="2:17"></div>
                 <div className="time-minor" id="2:18"></div>
                 <p className="time-text" id="2:19">TIME</p>
-                <Countdown initialCountdownSeconds={3000} onCountdownEnd={handleAnswer} answerSubmit={displayScore} start={finalNumCheck} />
+                <Countdown initialCountdownSeconds={seconds} onCountdownEnd={handleAnswer} answerSubmit={displayScore} start={finalNumCheck} />
               </div>
             </div>
           </div>

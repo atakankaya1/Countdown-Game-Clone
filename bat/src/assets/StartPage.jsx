@@ -1,6 +1,6 @@
 import React from 'react';
 
-function StartGame({ onStartGame }) {
+function StartGame({ onStartGame, duration }) {
   return (
     <div>
       <h1>Welcome to Bir İşlem!</h1>
@@ -12,6 +12,13 @@ function StartGame({ onStartGame }) {
       <button onClick={() => onStartGame("easy")}>
         Easy Mode
       </button>
+      <h3>Select countdown duration:</h3>
+      <select value={30} onChange={(e) => duration(Number(e.target.value))}>
+        <option value={30}>30 seconds</option>
+        <option value={45}>45 seconds</option>
+        <option value={60}>60 seconds</option>
+        <option value={-1}>Unlimited</option>
+      </select>
     </div>
   );
 }

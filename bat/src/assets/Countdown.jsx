@@ -7,7 +7,7 @@ const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit, star
   useEffect(() => {
     // Decrease the countdown by 1 every second
     const timer = setInterval(() => {
-      if (isRunning && countdown && start > 0) {
+      if (isRunning && countdown > 0 && start) {
         setCountdown((prevCountdown) => prevCountdown - 1);
       }
     }, 1000);
@@ -24,7 +24,7 @@ const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit, star
 
   return (
     <>
-      <p className="time-num" id="2:27">{countdown}</p>
+      <p className="time-num" id="2:27">{countdown === -1 ? "∞" : countdown}</p>
     </>
   );
 };
