@@ -5,7 +5,7 @@ import logo from "./assets/countdown-log.png"
 const BASE_HOST = "http://localhost:8080/api/game"
 
 // UNDO butonu ekle
-// sayıların tek tek animasyonla gelmesini sağla, countdown ona göre başlasın
+// sayıların tek tek animasyonla gelmesini sağla
 
 // background color için bir div ve class ekle
 // sayıya ulaşınca oyunu bitir
@@ -49,6 +49,7 @@ function App() {
   const [previousOperations, setPreviousOperations] = useState([])
   const [previousNums, SetPreviousNums] = useState({})
   const [selectedMode, setSelectedMode] = useState("normal")
+  const [numHistory, setNumHistory] = useState([])
 
   
   
@@ -103,7 +104,6 @@ function App() {
    
   //functions
 
-  console.log(nums)
 
   function handleModeChange(mode) {
     setSelectedMode(mode);
@@ -140,6 +140,7 @@ function App() {
         secondNum,
         count: calculatedResult,
       }
+      setNumHistory((prevNumHistory) => [...prevNumHistory, nums]);
       setNums((prevNums) => {
         return {
           ...prevNums,
@@ -175,6 +176,20 @@ function App() {
     }
   }
     
+  }
+
+ 
+  function handleUndo() {
+    if (numHistory.length > 0) {
+      const newNumHistory = [...numHistory]
+      setNumHistory(newNumHistory.slice(0,-1))
+      const previousNumsState = newNumHistory.pop()
+      const updatedNums = {...previousNumsState}
+      Object.keys(updatedNums).forEach((index) => {
+        updatedNums[index] = { ...updatedNums[index], isEnabled: true };
+      })
+      setNums(updatedNums);
+    }
   }
 
   function handleNumClick(value, index) {
@@ -216,16 +231,11 @@ function App() {
     }
   }, [secondNum, ope, showResult]);
   
-  function handleUndo() {
-    if (previousOperations.length > 0) {
-      setOperations((prevOperations) => prevOperations.slice(0, -1));
-      setNums({ ...previousNums });
-      setPreviousOperations((prevOperations) => prevOperations.slice(0, -1));
-    }
 
-
-  }
+  
+  
  
+/*
 
   function handleDelete(){
     if(firstNum && ope && secondNum){
@@ -249,8 +259,10 @@ function App() {
     }
   }
 
+*/
   function handleRestart(){
    setNums(originalNums)
+   setNumHistory([])
     setFirstNum("")
     setSecondNum("")
     setOpe("")
@@ -318,7 +330,7 @@ function App() {
     );
   });
 
-
+  /*
   const displayOperation =  operations.map((operation, index) => (
     <div key={index} className="operation">
       <p>
@@ -326,6 +338,7 @@ function App() {
       </p>
     </div>
   ))
+  */
 
   const fourOpe = ["+","-","/","*"]
 
@@ -363,13 +376,14 @@ function App() {
       </div>
     )
 
-  
+  /*
   const modeSelection = (
     <>
       <button onClick={() => handleModeChange("normal")}>Normal Mode</button>
       <button onClick={() => handleModeChange("easy")}>Easy Mode</button>
     </>
   )
+  */
 
  
 
@@ -425,9 +439,9 @@ function App() {
           </div>
           <button 
             className="delete" 
-            onClick={()=>handleDelete()} 
+            onClick={()=>handleUndo()} 
             disabled={areButtonsDisabled}>
-          Del
+          Undo
           </button>
         </div>
       </div>
