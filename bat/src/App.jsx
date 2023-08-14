@@ -5,10 +5,11 @@ import logo from "./assets/countdown-log.png"
 const BASE_HOST = "http://localhost:8080/api/game"
 
 
-// sayıya ulaşınca oyunu bitir
-// tek sayı kalınca best score'a kaydet (bitmediyse)
 
-// (optional) kullanıcı zaman limitini kendi belirlesin
+// giriş ekranı css
+// final score css
+// (optional) kullanıcı zaman limitini kendi belirlesin (custom mode gibi)
+
 
 // background color için bir div ve class ekle
 // oyun bitince showSolution ve your solution
@@ -47,6 +48,7 @@ function App() {
   const [previousNums, SetPreviousNums] = useState({})
   const [selectedMode, setSelectedMode] = useState("normal")
   const [numHistory, setNumHistory] = useState([])
+  const [best, setBest] = useState()
 
   
   
@@ -98,6 +100,16 @@ function App() {
         });
     }
   }, [start, selectedMode, exactSolution]);
+
+  /* if we want score to be display when there is only one number left.
+  useEffect(() => {
+    const availableNumbers = Object.values(nums).filter(num => num.value != 0);
+    if (availableNumbers.length === 1) {
+      handleAnswer();
+    }
+  }, [nums]);
+  */
+
    
   //functions
 
@@ -271,22 +283,37 @@ function App() {
   }
   
   function handleAnswer() {
-    const finalCount = operations.slice(-1)
-  
-    if (finalCount.length > 0) {
-      const score = Number(finalNum) - Number(finalCount[0].count)
-      setScore(Math.abs(score))
+    const availableNumbers = Object.values(nums).filter(num => num.value != 0);
+
+  if (availableNumbers.length > 0) {
+    // Find the nearest number to the target number
+    const nearestNumber = availableNumbers.reduce((closest, num) => {
+      const diff1 = Math.abs(finalNum - num.value);
+      const diff2 = Math.abs(finalNum - closest.value);
+      return diff1 < diff2 ? num : closest;
+    });
+
+    const score = Math.abs(finalNum - nearestNumber.value);
+    setScore(score);
+    setBest(score)
+  } else {
+    // If no numbers left, calculate score based on the last remaining number
+    const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0);
+    if (lastRemainingNumber) {
+      const score = Math.abs(finalNum - lastRemainingNumber.value);
+      setScore(score);
+      setBest(score)
     } else {
-      // If no operations are made, set the score to the maximum possible value
-      const maxScore = Number(finalNum)
-      setScore(maxScore)
+      // In case of unexpected scenario where there are no numbers left, set score to 0
+      setScore(0);
     }
-  
-    setDisplayScore(true)
-    setAreButtonsDisabled(true)
-    setFirstNum("")
-    setOpe("")
-    setSecondNum("")
+  }
+
+  setDisplayScore(true);
+  setAreButtonsDisabled(true);
+  setFirstNum("");
+  setOpe("");
+  setSecondNum("");
     
   }
 
@@ -400,11 +427,11 @@ function App() {
           <div className="main-display" id="103:20">
             <img className="logo" src={logo} id="1:2"/>
             <div className="main-display-nums" id="103:5">
-              <div className="best" id="103:2">
+              <div className={finalNumCheck ? "best" : "best-hidden"} id="103:2">
                 <div className="best-main" id="2:14"></div>
                 <div className="best-minor" id="2:15"></div>
                 <p className="best-text" id="2:16">YOUR BEST</p>
-                <p className="best-num" id="2:28">220</p>
+                <p className="best-num" id="2:28">{best}</p>
               </div>
               <div className="target" id="103:3">
                 <div className="target-main" id="2:4"></div>
@@ -412,7 +439,7 @@ function App() {
                 <p className="target-text" id="2:7">TARGET</p>
                 <p className="target-num" id="2:26">{finalNumCheck ? finalNum : "???"}</p>
               </div>
-              <div className="time" id="103:4">
+              <div className={finalNumCheck ? "time" : "time-hidden"} id="103:4">
                 <div className="time-main" id="2:17"></div>
                 <div className="time-minor" id="2:18"></div>
                 <p className="time-text" id="2:19">TIME</p>
@@ -424,7 +451,13 @@ function App() {
             {initialNums}
           </div>
         </div>
-        <div className="operators" id="103:19">
+        
+          {score ? 
+            <div>
+              <p>Your score is: {score}</p>
+            </div>:
+            
+          <div className="operators" id="103:19">
           <button 
             className="restart" 
             onClick={()=>handleRestart()}
@@ -440,8 +473,18 @@ function App() {
             disabled={areButtonsDisabled}>
           Undo
           </button>
+          <button 
+            className="delete" 
+            onClick={()=>handleAnswer()} 
+            disabled={areButtonsDisabled}>
+          Submit
+          </button>
+          </div>
+            
+          }
+         
         </div>
-      </div>
+      
         }
     </>
   )
