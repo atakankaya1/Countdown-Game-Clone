@@ -9,7 +9,8 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 // giriş ekranı css
 // final score css
-//c
+//point sistemine tekrardan css yap!
+// best template'i kullan
 
 
 // background color için bir div ve class ekle
@@ -50,6 +51,7 @@ function App() {
   const [selectedMode, setSelectedMode] = useState("normal")
   const [numHistory, setNumHistory] = useState([])
   const [best, setBest] = useState()
+  const [points, setPoints] = useState(0)
   const [seconds, SetSeconds] = useState(30)
 
 
@@ -299,6 +301,15 @@ function App() {
     });
 
     const score = Math.abs(finalNum - nearestNumber.value);
+    if(score === 0){
+      setPoints(10)
+    } else if(score > 0 && score <= 5){
+      setPoints(7)
+    } else if(score > 5 && score <=10 ){
+      setPoints(5)
+    } else {
+      setPoints(0)
+    }
     setScore(score);
     setBest(score)
   } else {
@@ -306,6 +317,15 @@ function App() {
     const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0);
     if (lastRemainingNumber) {
       const score = Math.abs(finalNum - lastRemainingNumber.value);
+      if(score === 0){
+        setPoints(10)
+      } else if(score > 0 && score <= 5){
+        setPoints(7)
+      } else if(score > 5 && score <=10 ){
+        setPoints(5)
+      } else {
+        setPoints(0)
+      }
       setScore(score);
       setBest(score)
     } else {
@@ -433,7 +453,7 @@ function App() {
     <>
       
       {!start ?
-       <StartGame onStartGame={handleStartGame} duration={handleStartSeconds} /> :
+       <StartGame onStartGame={handleStartGame} duration={handleStartSeconds} iniSecond={seconds} /> :
       <div className="main" id="105:21">
         <div className="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
           <div className="main-display" id="103:20">
@@ -464,9 +484,10 @@ function App() {
           </div>
         </div>
         
-          {score ? 
+          {(score || score ===0) ? 
             <div>
-              <p>Your score is: {score}</p>
+              <p>Exact Solution is Possible!</p>
+              <p>{`+${points}`}</p>
             </div>:
             
           <div className="operators" id="103:19">
