@@ -484,4 +484,46 @@ body{
       font-weight: 400;
       font-size: 2rem;
     }
+
+    .solution{
+      position: absolute;
+      top: 15rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: black;
+      background-color: #faf9f1;
+      border: black solid 1px;
+      border-radius: 5%;
+      min-height: 233px;
+      height: 15rem;
+      width: 10rem;
+      font-weight: bold;
+      padding: 0px;
+      font-size: 18px;
+      z-index: 1;
+    }
+    .solution-hidden{
+      position: absolute;
+      top: 15rem;
+      visibility: hidden;
+      z-index: -1;
+    }
+    
+    .solution h3{
+      align-self: center;
+      margin-top: 0px;
+      padding-top: 0px;
+      font-size: 18px;
+    }
+    
+    .everySol{
+      margin-top: 0px;
+      margin-bottom: 0px; 
+      line-height: 0px;
+      padding: 0px;
+      font-size: 18px;
+      line-height: 0px;
+    }
   

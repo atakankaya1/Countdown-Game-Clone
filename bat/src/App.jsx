@@ -10,12 +10,9 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 // giriş ekranı css
 // final score css
-//point sistemine tekrardan css yap!
-// best template'i kullan
 
 
 // background color için bir div ve class ekle
-// oyun bitince showSolution ve your solution
 // dark mode
 
 
@@ -333,10 +330,6 @@ function App() {
     
   }
 
-  function showSolution(){
-    setSolutionShow(!solutionShow)
-  }
-
   const fourOpe = ["+","-","/","*"]
 
   const fourOpeComp = fourOpe.map((op,index) => (
@@ -351,7 +344,6 @@ function App() {
     </button>)
   )
 
-  const textWin = "You Win!!"
 
   const bestSolution = solution.map(function(sol, index){
     return <div key={index} className='everySol'> 
@@ -366,6 +358,12 @@ function App() {
   function handleStartSeconds(duration){
     SetSeconds(duration)
   }
+
+  function revealSolution(){
+    if(score){
+      setSolutionShow(!solutionShow)
+    }
+  }
   
 
   return (
@@ -374,6 +372,7 @@ function App() {
       {!start ?
        <StartGame onStartGame={handleStartGame} duration={handleStartSeconds} iniSecond={seconds} /> :
       <div className="main" id="105:21">
+        <div className={solutionShow ? "solution" : "solution-hidden"}>{bestSolution}</div>
         <div className="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
           <div className="main-display" id="103:20">
             <img className="logo" src={logo} id="1:2"/>
@@ -408,10 +407,9 @@ function App() {
           />
           </div>
         </div>
-        
           {(score || score ===0) ? 
             <div className="end-game">
-              <button className="end-game-solution">Reveal Solution</button>
+              <button className="end-game-solution" onClick={()=>revealSolution()}>Reveal Solution</button>
                 <div className="points-area">
                   <p className="end-game-pr">Exact Solution is Possible!</p>
                   <p className="end-game-po">{`+${points} Points`}</p>

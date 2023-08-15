@@ -202,38 +202,7 @@
   line-height: 20px;
 }
 
-.solution{
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  color: black;
-  background-color: #b28a82;
-  border: black solid 1px;
-  border-radius: 5%;
-  min-height: 233px;
-  height: 298px;
-  width: 140px;
-  font-weight: bold;
-  padding: 0px;
-  font-size: 18px;
-}
 
-.solution h3{
-  align-self: center;
-  margin-top: 0px;
-  padding-top: 0px;
-  font-size: 18px;
-}
-
-.everySol{
-  margin-top: 0px;
-  margin-bottom: 5px; 
-  line-height: 0px;
-  padding: 0px;
-  font-size: 18px;
-  line-height: 20px;
-}
 
 .endOpe{
   display: flex;
