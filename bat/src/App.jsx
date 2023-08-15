@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
 import StartGame from "./assets/StartPage"
+import NumbersComponent from './assets/NumbersComponent'
 import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
@@ -54,13 +55,30 @@ function App() {
   const [points, setPoints] = useState(0)
   const [seconds, SetSeconds] = useState(30)
 
-
+  function backBtn(){
+    setDisplayScore(false)
+    setExactSolution(true)
+    setStart(false)
+    setFinalNumCheck(false)
+    setFinalNum("")
+    setOriginalNums({})
+    setNums({})
+    setNumHistory([])
+    setBest()
+    setPoints(0)
+    setShowResult(false)
+    setSolution([])
+    setScore()
+    setNumHistory([])
+    setAreButtonsDisabled(false)
+  }
  
 
   
   
   
   //fetch Request
+  
   useEffect(() => {
     if (start) {
       const fetchUrl = selectedMode === "easy" ? `${BASE_HOST}/easy` : BASE_HOST;
@@ -90,7 +108,6 @@ function App() {
             show:true
           }));
 
-           
           setTimeout(() => {
             setFinalNumCheck(true)
           }, 7000)
@@ -248,34 +265,6 @@ function App() {
   }, [secondNum, ope, showResult]);
   
 
-  
-  
- 
-/*
-
-  function handleDelete(){
-    if(firstNum && ope && secondNum){
-      setSecondNum("")
-      setNums((prevNums) => {
-        const updatedNums = { ...prevNums }
-        updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true }
-        return updatedNums
-      })
-      setSecondNumIndex(null)
-    } else if(firstNum && ope){
-      setOpe("")
-    } else if (firstNum){
-      setFirstNum("")
-      setNums((prevNums) => {
-        const updatedNums = { ...prevNums }
-        updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true }
-        return updatedNums
-      })
-      setFirstNumIndex(null)
-    }
-  }
-
-*/
   function handleRestart(){
    setNums(originalNums)
    setNumHistory([])
@@ -301,6 +290,8 @@ function App() {
     });
 
     const score = Math.abs(finalNum - nearestNumber.value);
+    setScore(score);
+    setBest(nearestNumber.value)
     if(score === 0){
       setPoints(10)
     } else if(score > 0 && score <= 5){
@@ -310,13 +301,14 @@ function App() {
     } else {
       setPoints(0)
     }
-    setScore(score);
-    setBest(score)
+    
   } else {
     // If no numbers left, calculate score based on the last remaining number
     const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0);
     if (lastRemainingNumber) {
       const score = Math.abs(finalNum - lastRemainingNumber.value);
+      setScore(score);
+      setBest(lastRemainingNumber.value)
       if(score === 0){
         setPoints(10)
       } else if(score > 0 && score <= 5){
@@ -326,8 +318,7 @@ function App() {
       } else {
         setPoints(0)
       }
-      setScore(score);
-      setBest(score)
+      
     } else {
       // In case of unexpected scenario where there are no numbers left, set score to 0
       setScore(0);
@@ -345,49 +336,6 @@ function App() {
   function showSolution(){
     setSolutionShow(!solutionShow)
   }
-
-
-
-  //Numbers and Operation
-
-  
-  const initialNums = Object.keys(nums).map((index) => {
-    const num = nums[index];
-    
-    let classNames = num.isEnabled ? 'num-box' : 'num-box-disabled'
-  
-
-    setTimeout(() => {
-      setNums((prevNums) => {
-        const updatedNums = { ...prevNums }
-        updatedNums[index] = { ...updatedNums[index], show:true }
-        return updatedNums
-      })
-    }, num.delay)
-    
-
-    return (
-      <button
-        key={index}
-        value={num.value}
-        onClick={() => handleNumClick(num.value, index)}
-        disabled={!num.isEnabled || areButtonsDisabled || !finalNumCheck}
-        className={num.value === 0 ? `${classNames} num-box-noCursor` : classNames}
-      >
-        {num.value === 0 ? '' : num.show ? num.value : "?"}
-      </button>
-    );
-  });
-
-  /*
-  const displayOperation =  operations.map((operation, index) => (
-    <div key={index} className="operation">
-      <p>
-        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
-      </p>
-    </div>
-  ))
-  */
 
   const fourOpe = ["+","-","/","*"]
 
@@ -418,36 +366,7 @@ function App() {
   function handleStartSeconds(duration){
     SetSeconds(duration)
   }
-  const startGame = (
-      <div>
-        <h1>Welcome to Bir İşlem!</h1>
-          <p>You will have 30 seconds to find the number when you start the game.</p>
-          <h3>When you're ready, select a mode:</h3>
-          <button onClick={() => { setStart(true); setSelectedMode("normal"); }}>
-            Normal Mode
-          </button>
-          <button onClick={() => { setStart(true); setSelectedMode("easy"); }}>
-            Easy Mode
-          </button>
-      </div>
-    )
-
-  /*
-  const modeSelection = (
-    <>
-      <button onClick={() => handleModeChange("normal")}>Normal Mode</button>
-      <button onClick={() => handleModeChange("easy")}>Easy Mode</button>
-    </>
-  )
-  */
-
- 
-
   
-    
-    
-  //<button onClick={() => handleModeChange("normal")}>Normal Mode</button>
-//<button onClick={() => handleModeChange("easy")}>Easy Mode</button>
 
   return (
     <>
@@ -463,7 +382,7 @@ function App() {
                 <div className="best-main" id="2:14"></div>
                 <div className="best-minor" id="2:15"></div>
                 <p className="best-text" id="2:16">YOUR BEST</p>
-                <p className="best-num" id="2:28">{best}</p>
+                <p className="best-num" id="2:28">{best ? best : ""}</p>
               </div>
               <div className="target" id="103:3">
                 <div className="target-main" id="2:4"></div>
@@ -480,14 +399,24 @@ function App() {
             </div>
           </div>
           <div className="numbers" id="103:12">
-            {initialNums}
+          <NumbersComponent
+            nums={nums}
+            setNums={setNums}
+            handleNumClick={handleNumClick}
+            areButtonsDisabled={areButtonsDisabled}
+            finalNumCheck={finalNumCheck}
+          />
           </div>
         </div>
         
           {(score || score ===0) ? 
-            <div>
-              <p>Exact Solution is Possible!</p>
-              <p>{`+${points}`}</p>
+            <div className="end-game">
+              <button className="end-game-solution">Reveal Solution</button>
+                <div className="points-area">
+                  <p className="end-game-pr">Exact Solution is Possible!</p>
+                  <p className="end-game-po">{`+${points} Points`}</p>
+                </div>
+              <button className="back-button" onClick={()=>backBtn()}>Back to Menu</button>
             </div>:
             
           <div className="operators" id="103:19">
