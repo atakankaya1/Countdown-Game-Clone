@@ -8,11 +8,6 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 
 
-// giriş ekranı css
-// final score css
-
-
-// background color için bir div ve class ekle
 // dark mode
 
 
@@ -53,6 +48,7 @@ function App() {
   const [seconds, SetSeconds] = useState(30)
 
   function backBtn(){
+    setSolutionShow(false)
     setDisplayScore(false)
     setExactSolution(true)
     setStart(false)
@@ -94,7 +90,7 @@ function App() {
           const requestedNumbers = data.numbers.map((n, index) => ({
             value: n,
             isEnabled: true,
-            delay: (index+1)*1000,
+            delay: (index+1)*750,
             show:false
           }));
 
@@ -107,7 +103,7 @@ function App() {
 
           setTimeout(() => {
             setFinalNumCheck(true)
-          }, 7000)
+          }, 5500)
           setNums(requestedNumbers);
           setOriginalNums(requestedNumbersRes);
           setSolution(data.bestSolution);
@@ -360,7 +356,7 @@ function App() {
   }
 
   function revealSolution(){
-    if(score){
+    if(score || score===0){
       setSolutionShow(!solutionShow)
     }
   }
@@ -418,21 +414,25 @@ function App() {
             </div>:
             
           <div className="operators" id="103:19">
-          <button 
-            className="restart" 
-            onClick={()=>handleRestart()}
-            disabled={areButtonsDisabled}>
-          Res
-          </button>
+            <div className='res-undo'>
+              <button 
+                className="restart" 
+                onClick={()=>handleRestart()}
+                disabled={areButtonsDisabled}>
+                Res
+              </button>
+              <button 
+                className="delete" 
+                onClick={()=>handleUndo()} 
+                disabled={areButtonsDisabled}>
+                Undo
+              </button>
+            </div>
+         
           <div className="ope-together">
             {fourOpeComp}
           </div>
-          <button 
-            className="delete" 
-            onClick={()=>handleUndo()} 
-            disabled={areButtonsDisabled}>
-          Undo
-          </button>
+          
           <button 
             className="delete" 
             onClick={()=>handleAnswer()} 
