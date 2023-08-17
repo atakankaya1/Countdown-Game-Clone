@@ -17,7 +17,7 @@ function Operators({ handleOpe, areButtonsDisabled, handleRestart, handleUndo, h
   console.log(firstNum)
 
   return (
-    <div className="operators" id="103:19">
+    <div className="operators">
       <div className="res-undo">
         <button
           className="restart"
@@ -33,7 +33,7 @@ function Operators({ handleOpe, areButtonsDisabled, handleRestart, handleUndo, h
           onClick={() => handleUndo()}
           disabled={areButtonsDisabled}
         >
-          ⤺
+            ⤺
         </button>
       </div>
 

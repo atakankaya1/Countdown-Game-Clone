@@ -25,7 +25,7 @@ const Countdown = ({ initialCountdownSeconds, onCountdownEnd, answerSubmit, star
 
   return (
     <>
-      <p className="time-num" id="2:27">{countdown === -1 ? "∞" : countdown}</p>
+      <p className="time-num">{countdown === -1 ? "∞" : countdown}</p>
     </>
   );
 };

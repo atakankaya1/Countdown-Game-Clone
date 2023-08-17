@@ -1,6 +1,6 @@
 import React from 'react';
 
-function EndGame({ score, points, revealSolution, revealUserSolution, backBtn }) {
+function EndGame({ points, revealSolution, revealUserSolution, backBtn }) {
   return (
     <div className="end-game">
       <div className="end-solution-btns">
