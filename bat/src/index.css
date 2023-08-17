@@ -72,7 +72,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
         }
 
           .best-main {
-            background-color: white;
+            background-color: #c9f4fe;
             border-radius: 5%;
             height: 5rem;
             left: 0;
@@ -82,7 +82,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
             margin: 0 auto;
           }
           .best-minor {
-            background-color: #979797;
+            background-color: #e4f9fe;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             border-radius: 5%;
             height: 2.2rem;
             left: 3.8rem;
@@ -93,7 +94,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
           .best-text {
             color: #000000;
             font-family: Inter, 'Source Sans Pro';
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 400;
             height: 1.5rem;
             left: 3.8rem;
@@ -127,7 +128,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
         }
 
           .target-main {
-            background-color: #489d97;
+            background-color: #c9f4fe;
             border-radius: 5%;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             height: 8rem;
@@ -137,7 +138,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
             width: 18rem;
           }
           .target-minor {
-            background-color: #979797;
+            background-color: #e4f9fe;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             border-radius: 5%;
             height: 2rem;
@@ -188,7 +189,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
         }
 
           .time-main {
-            background-color: #d9d9d9;
+            background-color: #c9f4fe;
             border-radius: 5%;
             height: 5rem;
             left: 0;
@@ -198,7 +199,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
             margin: 0 auto;
           }
           .time-minor {
-            background-color: #979797;
+            background-color: #e4f9fe;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             border-radius: 5%;
             height: 2.2rem;
             left: 3.8rem;
@@ -209,7 +211,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
           .time-text {
             color: #000000;
             font-family: Inter, 'Source Sans Pro';
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 400;
             height: 1.5rem;
             left: 3.8rem;
@@ -247,7 +249,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
 
       .num-box {
         align-items: center;
-        background-color: #d9d9d9;
+        background-color: #b2f0fe;
         border: none;
         border-radius: 10%;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
@@ -322,8 +324,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
       border: 5px solid transparent;
       border-image-slice: 1;
       border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
       background-size: cover;
       border-radius: 4rem;
       color: #000000;
@@ -343,20 +345,20 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
 
     .restart:hover{
       background-image: linear-gradient(90deg, rgb(177, 62, 62), rgb(177, 62, 62)),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
 
     .four-ope,
     .four-ope-disabled {
       align-items: center;
-      background-color: #d9d9d9;
+      background-color: #e4f9fe;
       background-clip: padding-box, border-box;
       background-origin: border-box;
       border: 5px solid transparent;
       border-image-slice: 1;
       border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
       background-size: cover;
       border-radius: 4rem;
       color: #000000;
@@ -378,12 +380,12 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
     .four-ope-disabled:hover{
       background-color: bisque;
       background-image: linear-gradient(90deg, greenyellow, greenyellow),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
     .four-ope:focus{
       background-color: greenyellow;
       background-image: linear-gradient(90deg, greenyellow, greenyellow),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
     
     .submit-btn{
@@ -394,8 +396,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
       border: 5px solid transparent;
       border-image-slice: 1;
       border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
       background-size: cover;
       border-radius: 4rem;
       color: #000000;
@@ -415,7 +417,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
 
     .submit-btn:hover{
       background-image: linear-gradient(90deg, greenyellow, greenyellow),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
 
     .delete {
@@ -426,8 +428,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
       border: 5px solid transparent;
       border-image-slice: 1;
       border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
       background-size: cover;
       border-radius: 4rem;
       color: #000000;
@@ -447,7 +449,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
 
     .delete:hover{
       background-image: linear-gradient(90deg, rgb(213, 116, 116), rgb(213, 116, 116)),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
     #game-undo{
       font-size: 3rem;
@@ -511,8 +513,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
       border: 5px solid transparent;
       border-image-slice: 1;
       border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
       background-size: cover;
       border-radius: 4rem;
       color: #000000;
@@ -530,7 +532,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
     }
     .end-game-solution:hover{
       background-image: linear-gradient(90deg, greenyellow, greenyellow),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
     .back-button{
       align-items: center;
@@ -540,8 +542,8 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
       border: 5px solid transparent;
       border-image-slice: 1;
       border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
       background-size: cover;
       border-radius: 4rem;
       color: #000000;
@@ -559,7 +561,7 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
     }
     .back-button:hover{
       background-image: linear-gradient(90deg, rgb(213, 116, 116), rgb(213, 116, 116)),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      linear-gradient(180deg, #6a9098, #d0f6fe);
     }
 
     .end-game-po{
@@ -649,13 +651,13 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
         flex-shrink: 0;
         background-clip: padding-box, border-box;
       background-origin: border-box;
-      border: 5px solid transparent;
+      border: 3px solid transparent;
       border-image-slice: 1;
-      border-width: 5px;
-      background-image: linear-gradient(90deg, white, white),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+      border-width: 3px;
+      background-image: linear-gradient(90deg, #e4f9fe, #e4f9fe),
+      linear-gradient(180deg, #6a9098, #6a9098);
       background-size: cover;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        
         font-family: Inter, 'Source Sans Pro';
         font-size: 1rem;
         font-weight: 400;
@@ -669,13 +671,13 @@ background: linear-gradient(180deg, rgba(0,210,255,1) 50%, rgba(146,141,171,1) 9
 }
 
 .mode-btn:hover{
-  background-image: linear-gradient(90deg, greenyellow, greenyellow),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+  background-image: linear-gradient(90deg, #b6c7cb , #b6c7cb ),
+  linear-gradient(180deg, #6a9098, #d0f6fe);
 }
 
   #back:hover{
-    background-image: linear-gradient(90deg, rgb(213, 116, 116), rgb(213, 116, 116)),
-      linear-gradient(180deg, hsl(291, 6%, 46%), hsl(223, 64%, 98%));
+    background-image: linear-gradient(90deg, rgb(233, 153, 153), rgb(233, 153, 153)),
+    linear-gradient(180deg, #6a9098, #d0f6fe);
   }
 
 select {
@@ -688,7 +690,7 @@ select {
   flex: 1;
   padding: 0 1em;
   color: black;
-  background-color: #d9d9d9;
+  background-color: #e4f9fe;
   background-image: none;
   cursor: pointer;
  margin: 0 auto;
