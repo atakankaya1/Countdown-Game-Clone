@@ -29,7 +29,7 @@ function StartGame({ onStartGame, duration, iniSecond }) {
             <button className="mode-btn" onClick={() => onStartGame("easy")}>
                 Random
             </button>
-            <button className="mode-btn" onClick={() => setCustom(false)}>
+            <button className="mode-btn" id="back" onClick={() => setCustom(false)}>
                 Go Back
             </button>
         </div>

@@ -7,9 +7,10 @@ import logo from "./assets/countdown-log.png"
 const BASE_HOST = "http://localhost:8080/api/game"
 
 
-// dark mode
+
 // bölme için franctions are not allowed
 // çıkarma içim only positive numbers are allowed
+
 
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // üstteki not için: ya da işlemi yapma ve bütün butonlar bir süreliğine kırmızı yansın.
@@ -204,6 +205,9 @@ function App() {
     
   }
 
+  console.log("firstNum", firstNum)
+  console.log("ope", ope)
+  console.log("sec", secondNum)
  
   function handleUndo() {
     if (numHistory.length > 0) {
@@ -219,7 +223,7 @@ function App() {
   }
 
   function handleNumClick(value, index) {
-    if (firstNum === "" && value != 0) {
+    if (finalNumCheck && firstNum === "" && value != 0) {
       setFirstNum(value);
       setFirstNumIndex(index);
       setNums((prevNums) => {
@@ -227,7 +231,7 @@ function App() {
         updatedNums[index] = { ...updatedNums[index], isEnabled: false};
         return updatedNums;
       });
-    } else if (firstNum && !ope && value != 0) {
+    } else if (finalNumCheck && firstNum && !ope && value != 0) {
       setNums((prevNums) => {
         const updatedNums = { ...prevNums };
         updatedNums[firstNumIndex] = {
@@ -245,7 +249,7 @@ function App() {
       setFirstNumIndex(index);
       setSecondNum("");
       setShowResult(false); // Reset showResult when selecting a new first number
-    } else if (ope && value != 0) {
+    } else if (finalNumCheck && ope && value != 0) {
       setSecondNum(value);
       setSecondNumIndex(index);
       setShowResult(true); // Show the result on the second number button
@@ -259,19 +263,19 @@ function App() {
   
 
   function handleRestart(){
-   setNums(originalNums)
-   setNumHistory([])
-    setFirstNum("")
-    setSecondNum("")
-    setOpe("")
-    setOperations([])
-   
-    
-    
-    setDisplayScore(false)
+    if(finalNumCheck){
+      setNums(originalNums)
+      setNumHistory([])
+       setFirstNum("")
+       setSecondNum("")
+       setOpe("")
+       setOperations([])
+       setDisplayScore(false)
+    }
   }
   
   function handleAnswer() {
+    if(finalNumCheck){
     const availableNumbers = Object.values(nums).filter(num => num.value != 0);
 
   if (availableNumbers.length > 0) {
@@ -316,6 +320,7 @@ function App() {
       // In case of unexpected scenario where there are no numbers left, set score to 0
       setScore(0);
     }
+    
   }
 
   setDisplayScore(true);
@@ -323,17 +328,27 @@ function App() {
   setFirstNum("");
   setOpe("");
   setSecondNum("");
+  }
     
   }
+
+function handleOpe(value){
+  if(firstNum){
+    setOpe(value)
+  } else {
+    setOpe("")
+  }
+}
+ 
 
   const fourOpe = ["+","-","×","÷"]
 
   const fourOpeComp = fourOpe.map((op,index) => (
   <button 
     key={index} 
-    value={op} 
-    onClick={e => setOpe(e.target.value)}
-    className='four-ope'
+    value={op=="×" ? "*" : op} 
+    onClick={e => handleOpe(e.target.value)}
+    className={firstNum ? "four-ope" : "four-ope-disabled"}
     disabled={areButtonsDisabled}
     >
       {op}
@@ -417,15 +432,17 @@ function App() {
             <div className='res-undo'>
               <button 
                 className="restart" 
+                id="game-undo"
                 onClick={()=>handleRestart()}
                 disabled={areButtonsDisabled}>
-                Res
+                ⟲
               </button>
               <button 
                 className="delete" 
+                id="game-undo"
                 onClick={()=>handleUndo()} 
                 disabled={areButtonsDisabled}>
-                Undo
+                ⤺
               </button>
             </div>
          
@@ -434,10 +451,10 @@ function App() {
           </div>
           
           <button 
-            className="delete" 
+            className="submit-btn" 
             onClick={()=>handleAnswer()} 
             disabled={areButtonsDisabled}>
-          Submit
+          ✔
           </button>
           </div>
             
