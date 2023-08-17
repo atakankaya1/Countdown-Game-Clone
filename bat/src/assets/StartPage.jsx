@@ -38,8 +38,7 @@ function StartGame({ onStartGame, duration, iniSecond }) {
 
   return (
     <div className="start-main">
-      <h1>Welcome to Bir İşlem!</h1>
-      <p>You can play original Countdown game or customize your gameplay!</p>
+      <h1>Welcome to Countdown</h1>
       <h3>When you're ready, select a mode:</h3>
       {!custom ? (
                 <div className="mode-select">

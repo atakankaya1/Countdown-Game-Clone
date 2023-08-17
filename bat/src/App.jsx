@@ -37,11 +37,10 @@ function App() {
   const [secondNumIndex, setSecondNumIndex] = useState()
   const [solution, setSolution] = useState([])
   const [solutionShow, setSolutionShow] = useState(false)
+  const [solutionUserShow, setSolutionUserShow] = useState(false)
   const [exactSolution, setExactSolution] = useState(true)
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
   const [showResult, setShowResult] = useState(false);
-  const [previousOperations, setPreviousOperations] = useState([])
-  const [previousNums, SetPreviousNums] = useState({})
   const [selectedMode, setSelectedMode] = useState("normal")
   const [numHistory, setNumHistory] = useState([])
   const [best, setBest] = useState()
@@ -61,10 +60,12 @@ function App() {
     setBest()
     setPoints(0)
     setShowResult(false)
+    setSolutionUserShow(false)
     setSolution([])
     setScore()
     setNumHistory([])
     setAreButtonsDisabled(false)
+    setOperations([])
   }
  
 
@@ -181,8 +182,6 @@ function App() {
         }
       })
       setOperations((prevOperations) => [...prevOperations, operation])
-      setPreviousOperations((prev) => [...prev, {...operation}])
-      SetPreviousNums({...nums})
       setFirstNum("")
       setOpe("")
       setSecondNum("")
@@ -211,6 +210,8 @@ function App() {
  
   function handleUndo() {
     if (numHistory.length > 0) {
+      const newOperation = [...operations]
+      setOperations(newOperation.slice(0,-1))
       const newNumHistory = [...numHistory]
       setNumHistory(newNumHistory.slice(0,-1))
       const previousNumsState = newNumHistory.pop()
@@ -361,6 +362,32 @@ function handleOpe(value){
               <p >{sol}</p>
           </div>
   })
+
+  const userOperations = Object.keys(operations).map((index)=>{
+    const useOpe = operations[index]
+    return <div key={index} className='everySol'>
+              <p >{useOpe.firstNum+useOpe.ope+useOpe.secondNum+"="+useOpe.count}</p>
+    </div>
+  })
+  /*
+  Object.keys(nums).map((index) => {
+        const num = nums[index];
+        let classNames = num.isEnabled ? 'num-box' : 'num-box-disabled';
+
+        return (
+          <button
+            key={index}
+            value={num.value}
+            onClick={() => handleNumClick(num.value, index)}
+            disabled={!num.isEnabled || areButtonsDisabled || !finalNumCheck}
+            className={num.value === 0 ? `${classNames} num-box-noCursor` : classNames}
+          >
+            {num.value === 0 ? '' : num.show ? num.value : '?'}
+          </button>
+        );
+      })
+  */
+
   function handleStartGame(mode) {
     setSelectedMode(mode);
     setStart(true);
@@ -372,7 +399,14 @@ function handleOpe(value){
 
   function revealSolution(){
     if(score || score===0){
+      //setSolutionUserShow(false)
       setSolutionShow(!solutionShow)
+    }
+  }
+  function revealUserSolution(){
+    if(score || score===0){
+      //setSolutionShow(false)
+      setSolutionUserShow(!solutionUserShow)
     }
   }
   
@@ -383,7 +417,20 @@ function handleOpe(value){
       {!start ?
        <StartGame onStartGame={handleStartGame} duration={handleStartSeconds} iniSecond={seconds} /> :
       <div className="main" id="105:21">
-        <div className={solutionShow ? "solution" : "solution-hidden"}>{bestSolution}</div>
+        <div className="solutions">
+            <div className={solutionShow ? "solution" : "solution-hidden"}>
+            <p className='sol-pr'>Solution</p>
+          {bestSolution}
+          </div>
+        <div className={solutionUserShow ? "solution" : "solution-hidden"}>
+          <p className='sol-pr'>Your Solution</p>
+          <div className='solution-display'>
+            {userOperations}
+          </div>
+          
+          </div>
+        </div>
+        
         <div className="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
           <div className="main-display" id="103:20">
             <img className="logo" src={logo} id="1:2"/>
@@ -420,11 +467,15 @@ function handleOpe(value){
         </div>
           {(score || score ===0) ? 
             <div className="end-game">
-              <button className="end-game-solution" onClick={()=>revealSolution()}>Reveal Solution</button>
-                <div className="points-area">
-                  <p className="end-game-pr">Exact Solution is Possible!</p>
-                  <p className="end-game-po">{`+${points} Points`}</p>
-                </div>
+              <div className='end-solution-btns'>
+                <button className="end-game-solution" onClick={()=>revealSolution()}>Reveal Solution</button>
+                <button className="end-game-solution" onClick={()=>revealUserSolution()}>Your Solution</button>
+              </div>
+              
+              <div className="points-area">
+                <p className="end-game-pr">Exact Solution is Possible!</p>
+                <p className="end-game-po">{`+${points} Points`}</p>
+              </div>
               <button className="back-button" onClick={()=>backBtn()}>Back to Menu</button>
             </div>:
             
