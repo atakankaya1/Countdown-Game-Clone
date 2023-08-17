@@ -618,8 +618,7 @@ body{
       z-index: 1;
     }
     .solution-hidden{
-      position: absolute;
-      top: 15rem;
+      position: relative;
       visibility: hidden;
       z-index: -1;
     }

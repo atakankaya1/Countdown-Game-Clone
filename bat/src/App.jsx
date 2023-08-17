@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import Countdown from './assets/Countdown'
 import StartGame from "./assets/StartPage"
 import NumbersComponent from './assets/NumbersComponent'
+import MainDisplayNums from './assets/MainDisplayNums'
+import Operators from './assets/Operators'
+import EndGame from './assets/EndGame'
+import Solutions from './assets/Solutions'
 import logo from "./assets/countdown-log.png"
 
 const BASE_HOST = "http://localhost:8080/api/game"
@@ -10,10 +14,10 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 // bölme için franctions are not allowed
 // çıkarma içim only positive numbers are allowed
-
-
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // üstteki not için: ya da işlemi yapma ve bütün butonlar bir süreliğine kırmızı yansın.
+
+// componentlere ayır
 
 
 
@@ -203,10 +207,6 @@ function App() {
   }
     
   }
-
-  console.log("firstNum", firstNum)
-  console.log("ope", ope)
-  console.log("sec", secondNum)
  
   function handleUndo() {
     if (numHistory.length > 0) {
@@ -369,24 +369,7 @@ function handleOpe(value){
               <p >{useOpe.firstNum+useOpe.ope+useOpe.secondNum+"="+useOpe.count}</p>
     </div>
   })
-  /*
-  Object.keys(nums).map((index) => {
-        const num = nums[index];
-        let classNames = num.isEnabled ? 'num-box' : 'num-box-disabled';
 
-        return (
-          <button
-            key={index}
-            value={num.value}
-            onClick={() => handleNumClick(num.value, index)}
-            disabled={!num.isEnabled || areButtonsDisabled || !finalNumCheck}
-            className={num.value === 0 ? `${classNames} num-box-noCursor` : classNames}
-          >
-            {num.value === 0 ? '' : num.show ? num.value : '?'}
-          </button>
-        );
-      })
-  */
 
   function handleStartGame(mode) {
     setSelectedMode(mode);
@@ -399,13 +382,11 @@ function handleOpe(value){
 
   function revealSolution(){
     if(score || score===0){
-      //setSolutionUserShow(false)
       setSolutionShow(!solutionShow)
     }
   }
   function revealUserSolution(){
     if(score || score===0){
-      //setSolutionShow(false)
       setSolutionUserShow(!solutionUserShow)
     }
   }
@@ -417,43 +398,24 @@ function handleOpe(value){
       {!start ?
        <StartGame onStartGame={handleStartGame} duration={handleStartSeconds} iniSecond={seconds} /> :
       <div className="main" id="105:21">
-        <div className="solutions">
-            <div className={solutionShow ? "solution" : "solution-hidden"}>
-            <p className='sol-pr'>Solution</p>
-          {bestSolution}
-          </div>
-        <div className={solutionUserShow ? "solution" : "solution-hidden"}>
-          <p className='sol-pr'>Your Solution</p>
-          <div className='solution-display'>
-            {userOperations}
-          </div>
-          
-          </div>
-        </div>
+        <Solutions
+          solutionShow={solutionShow}
+          bestSolution={bestSolution}
+          solutionUserShow={solutionUserShow}
+          userOperations={userOperations}
+        />
         
         <div className="all-nums-display" id="PXYfpuCMhfZNgFU4fX9q7V">
           <div className="main-display" id="103:20">
             <img className="logo" src={logo} id="1:2"/>
-            <div className="main-display-nums" id="103:5">
-              <div className={finalNumCheck ? "best" : "best-hidden"} id="103:2">
-                <div className="best-main" id="2:14"></div>
-                <div className="best-minor" id="2:15"></div>
-                <p className="best-text" id="2:16">YOUR BEST</p>
-                <p className="best-num" id="2:28">{best ? best : ""}</p>
-              </div>
-              <div className="target" id="103:3">
-                <div className="target-main" id="2:4"></div>
-                <div className="target-minor" id="2:6"></div>
-                <p className="target-text" id="2:7">TARGET</p>
-                <p className="target-num" id="2:26">{finalNumCheck ? finalNum : "???"}</p>
-              </div>
-              <div className={finalNumCheck ? "time" : "time-hidden"} id="103:4">
-                <div className="time-main" id="2:17"></div>
-                <div className="time-minor" id="2:18"></div>
-                <p className="time-text" id="2:19">TIME</p>
-                <Countdown initialCountdownSeconds={seconds} onCountdownEnd={handleAnswer} answerSubmit={displayScore} start={finalNumCheck} />
-              </div>
-            </div>
+            <MainDisplayNums
+            finalNumCheck={finalNumCheck}
+            best={best}
+            finalNum={finalNum}
+            handleAnswer={handleAnswer}
+            displayScore={displayScore}
+            seconds={seconds}
+          />
           </div>
           <div className="numbers" id="103:12">
           <NumbersComponent
@@ -466,49 +428,21 @@ function handleOpe(value){
           </div>
         </div>
           {(score || score ===0) ? 
-            <div className="end-game">
-              <div className='end-solution-btns'>
-                <button className="end-game-solution" onClick={()=>revealSolution()}>Reveal Solution</button>
-                <button className="end-game-solution" onClick={()=>revealUserSolution()}>Your Solution</button>
-              </div>
-              
-              <div className="points-area">
-                <p className="end-game-pr">Exact Solution is Possible!</p>
-                <p className="end-game-po">{`+${points} Points`}</p>
-              </div>
-              <button className="back-button" onClick={()=>backBtn()}>Back to Menu</button>
-            </div>:
-            
-          <div className="operators" id="103:19">
-            <div className='res-undo'>
-              <button 
-                className="restart" 
-                id="game-undo"
-                onClick={()=>handleRestart()}
-                disabled={areButtonsDisabled}>
-                ⟲
-              </button>
-              <button 
-                className="delete" 
-                id="game-undo"
-                onClick={()=>handleUndo()} 
-                disabled={areButtonsDisabled}>
-                ⤺
-              </button>
-            </div>
-         
-          <div className="ope-together">
-            {fourOpeComp}
-          </div>
-          
-          <button 
-            className="submit-btn" 
-            onClick={()=>handleAnswer()} 
-            disabled={areButtonsDisabled}>
-          ✔
-          </button>
-          </div>
-            
+            <EndGame
+              score={score}
+              points={points}
+              revealSolution={revealSolution}
+              revealUserSolution={revealUserSolution}
+              backBtn={backBtn}
+            />:
+          <Operators
+            handleOpe={handleOpe}
+            areButtonsDisabled={areButtonsDisabled}
+            handleRestart={handleRestart}
+            handleUndo={handleUndo}
+            handleAnswer={handleAnswer}
+            firstNum={firstNum}
+          />
           }
          
         </div>
