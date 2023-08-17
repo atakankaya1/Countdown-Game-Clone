@@ -7,9 +7,9 @@ import logo from "./assets/countdown-log.png"
 const BASE_HOST = "http://localhost:8080/api/game"
 
 
-
 // dark mode
-
+// bölme için franctions are not allowed
+// çıkarma içim only positive numbers are allowed
 
 // küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
 // üstteki not için: ya da işlemi yapma ve bütün butonlar bir süreliğine kırmızı yansın.
@@ -326,14 +326,14 @@ function App() {
     
   }
 
-  const fourOpe = ["+","-","/","*"]
+  const fourOpe = ["+","-","×","÷"]
 
   const fourOpeComp = fourOpe.map((op,index) => (
   <button 
     key={index} 
     value={op} 
     onClick={e => setOpe(e.target.value)}
-    className='add'
+    className='four-ope'
     disabled={areButtonsDisabled}
     >
       {op}
