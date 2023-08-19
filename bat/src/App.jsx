@@ -10,8 +10,7 @@ import Alert from './assets/Alert'
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-
-// solutions ekranı ortalanmıyor
+// bazı stateler gereksiz olabilir. displayScore gibi
 // app.css ve index.css farklılıklarını gider
 
 import './App.css'
@@ -42,7 +41,6 @@ function App() {
   const [best, setBest] = useState()
   const [points, setPoints] = useState(0)
   const [seconds, SetSeconds] = useState(30)
-
   const [alertSub, setAlertSub] = useState(false)
   const [alertDiv, setAlertDiv] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
