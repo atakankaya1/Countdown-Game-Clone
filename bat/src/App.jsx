@@ -6,13 +6,12 @@ import Operators from './assets/Operators'
 import EndGame from './assets/EndGame'
 import Solutions from './assets/Solutions'
 import logo from "./assets/countdown-log.png"
+import Alert from './assets/Alert'
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// bölme için franctions are not allowed
-// çıkarma içim only positive numbers are allowed
-// küçük sayıdan büyük sayı çıkınca display ekranına düzgün yansıt --> uyarı yazısı çıkarmak daha mantıklı
-// üstteki not için: ya da işlemi yapma ve bütün butonlar bir süreliğine kırmızı yansın.
+
+// solutions ekranı ortalanmıyor
 // app.css ve index.css farklılıklarını gider
 
 import './App.css'
@@ -43,6 +42,10 @@ function App() {
   const [best, setBest] = useState()
   const [points, setPoints] = useState(0)
   const [seconds, SetSeconds] = useState(30)
+
+  const [alertSub, setAlertSub] = useState(false)
+  const [alertDiv, setAlertDiv] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
 
   //fetch Request
   
@@ -103,12 +106,32 @@ function App() {
 
   //functions
 
+  const handlePageClick = () => {
+    setShowAlert(false);
+    setAlertSub(false)
+    setAlertDiv(false)
+  };
+
+  useEffect(() => {
+    if (showAlert) {
+      document.addEventListener('click', handlePageClick);
+    } else {
+      document.removeEventListener('click', handlePageClick);
+    }
+
+    return () => {
+      document.removeEventListener('click', handlePageClick);
+    };
+  }, [showAlert]);
+
   function result(firstNumber, operator, secondNumber) {
     if (operator === "+") {
       return +firstNumber + +secondNumber
     } else if (operator === "-") {
       if (firstNumber <= secondNumber) {
-        return  secondNumber - firstNumber
+        setAlertSub(true)
+        setShowAlert(true)
+        return  false
       } else {
         return firstNumber - secondNumber
       }
@@ -116,6 +139,8 @@ function App() {
       return firstNumber * secondNumber
     } else {
       if (firstNumber % secondNumber !== 0) {
+        setAlertDiv(true)
+        setShowAlert(true)
         return false
       } else {
         return firstNumber / secondNumber
@@ -226,6 +251,7 @@ function App() {
     setNumHistory([])
     setAreButtonsDisabled(false)
     setOperations([])
+    setShowAlert(false)
   }
  
   function handleUndo() {
@@ -355,6 +381,13 @@ function App() {
       setSolutionUserShow(!solutionUserShow)
     }
   }
+
+  function alertShow(){
+    setShowAlert(false)
+    setAlertSub(false)
+    setAlertDiv(false)
+  }
+  
   
 
   return (
@@ -366,8 +399,15 @@ function App() {
           duration={handleStartSeconds} 
           iniSecond={seconds} 
         /> :
-
+        
         <div className="main">
+        <div className= {showAlert ? 'alert' : "alert-hidden"}>
+          <Alert 
+          alertSub={alertSub} 
+          alertDiv={alertDiv} 
+          alertShow={alertShow}/>
+        </div>
+        
         <Solutions
           solutionShow={solutionShow}
           bestSolution={bestSolution}
