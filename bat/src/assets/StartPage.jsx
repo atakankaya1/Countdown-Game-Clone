@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 function StartGame({ onStartGame, duration, iniSecond }) {
     const [custom, setCustom] = useState(false)
@@ -67,7 +67,7 @@ function StartGame({ onStartGame, duration, iniSecond }) {
       
       
     </div>
-  );
+  )
 }
 
-export default StartGame;
+export default StartGame

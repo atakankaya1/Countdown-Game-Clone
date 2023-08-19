@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 function EndGame({ points, revealSolution, revealUserSolution, backBtn }) {
   return (
@@ -20,7 +20,7 @@ function EndGame({ points, revealSolution, revealUserSolution, backBtn }) {
         Back to Menu
       </button>
     </div>
-  );
+  )
 }
 
-export default EndGame;
+export default EndGame

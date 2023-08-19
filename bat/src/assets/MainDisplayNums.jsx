@@ -1,5 +1,5 @@
-import React from 'react';
-import Countdown from './Countdown';
+import React from 'react'
+import Countdown from './Countdown'
 
 function MainDisplayNums({ finalNumCheck, best, finalNum, seconds, handleAnswer, displayScore }) {
   return (
@@ -38,7 +38,7 @@ function MainDisplayNums({ finalNumCheck, best, finalNum, seconds, handleAnswer,
         />
       </div>
     </div>
-  );
+  )
 }
 
-export default MainDisplayNums;
+export default MainDisplayNums

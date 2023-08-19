@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 function Operators({ handleOpe, areButtonsDisabled, handleRestart, handleUndo, handleAnswer, firstNum }) {
-  const fourOpe = ['+', '-', '×', '÷'];
+  const fourOpe = ['+', '-', '×', '÷']
 
   const fourOpeComp = fourOpe.map((op, index) => (
     <button
@@ -13,7 +13,7 @@ function Operators({ handleOpe, areButtonsDisabled, handleRestart, handleUndo, h
     >
       {op}
     </button>
-  ));
+  ))
   console.log(firstNum)
 
   return (
@@ -47,7 +47,7 @@ function Operators({ handleOpe, areButtonsDisabled, handleRestart, handleUndo, h
         ✔
       </button>
     </div>
-  );
+  )
 }
 
-export default Operators;
+export default Operators

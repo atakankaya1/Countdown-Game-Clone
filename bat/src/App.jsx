@@ -12,6 +12,7 @@ const BASE_HOST = "http://localhost:8080/api/game"
 
 // bazı stateler gereksiz olabilir. displayScore gibi
 // app.css ve index.css farklılıklarını gider
+// finalNumCheck ve son num-box değerleri ile bir mantık kurulabilir.
 
 import './App.css'
 
@@ -35,7 +36,7 @@ function App() {
   const [solutionUserShow, setSolutionUserShow] = useState(false)
   const [exactSolution, setExactSolution] = useState(true)
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
-  const [showResult, setShowResult] = useState(false);
+  const [showResult, setShowResult] = useState(false)
   const [selectedMode, setSelectedMode] = useState("normal")
   const [numHistory, setNumHistory] = useState([])
   const [best, setBest] = useState()
@@ -49,78 +50,78 @@ function App() {
   
   useEffect(() => {
     if (start) {
-      const fetchUrl = selectedMode === "easy" ? `${BASE_HOST}/easy` : BASE_HOST;
+      const fetchUrl = selectedMode === "easy" ? `${BASE_HOST}/easy` : BASE_HOST
   
       fetch(fetchUrl)
         .then((response) => {
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok')
           }
           
-          return response.json();
+          return response.json()
         })
         .then((data) => {
-          console.log(data);
-          setFinalNum(data.target);
+          console.log(data)
+          setFinalNum(data.target)
           const requestedNumbers = data.numbers.map((n, index) => ({
             value: n,
             isEnabled: true,
             delay: (index+1)*750,
             show:false
-          }));
+          }))
 
           const requestedNumbersRes = data.numbers.map((n, index) => ({
             value: n,
             isEnabled: true,
             delay: 0,
             show:true
-          }));
+          }))
 
           setTimeout(() => {
             setFinalNumCheck(true)
           }, 5500)
-          setNums(requestedNumbers);
-          setOriginalNums(requestedNumbersRes);
-          setSolution(data.bestSolution);
+          setNums(requestedNumbers)
+          setOriginalNums(requestedNumbersRes)
+          setSolution(data.bestSolution)
           if (!data.isSolutionExact) {
-            setExactSolution(!exactSolution);
+            setExactSolution(!exactSolution)
           }
          
         })
         .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
+          console.error('Error fetching data:', error)
+        })
     }
-  }, [start, selectedMode, exactSolution]);
+  }, [start, selectedMode, exactSolution])
 
   /* if we want score to be display when there is only one number left.
   useEffect(() => {
-    const availableNumbers = Object.values(nums).filter(num => num.value != 0);
+    const availableNumbers = Object.values(nums).filter(num => num.value != 0)
     if (availableNumbers.length === 1) {
-      handleAnswer();
+      handleAnswer()
     }
-  }, [nums]);
+  }, [nums])
   */
 
   //functions
 
-  const handlePageClick = () => {
-    setShowAlert(false);
+  function handlePageClick() {
+    setShowAlert(false)
     setAlertSub(false)
     setAlertDiv(false)
-  };
+  }
 
   useEffect(() => {
     if (showAlert) {
-      document.addEventListener('click', handlePageClick);
+      document.addEventListener('click', handlePageClick)
     } else {
-      document.removeEventListener('click', handlePageClick);
+      document.removeEventListener('click', handlePageClick)
     }
 
     return () => {
-      document.removeEventListener('click', handlePageClick);
-    };
-  }, [showAlert]);
+      document.removeEventListener('click', handlePageClick)
+    }
+  }, [showAlert])
 
   function result(firstNumber, operator, secondNumber) {
     if (operator === "+") {
@@ -156,7 +157,7 @@ function App() {
           secondNum,
           count: calculatedResult,
         }
-        setNumHistory((prevNumHistory) => [...prevNumHistory, nums]);
+        setNumHistory((prevNumHistory) => [...prevNumHistory, nums])
         setNums((prevNums) => {
           return {
             ...prevNums,
@@ -193,42 +194,42 @@ function App() {
 
   function handleNumClick(value, index) {
     if (finalNumCheck && firstNum === "" && value != 0) {
-      setFirstNum(value);
-      setFirstNumIndex(index);
+      setFirstNum(value)
+      setFirstNumIndex(index)
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[index] = { ...updatedNums[index], isEnabled: false};
-        return updatedNums;
-      });
+        const updatedNums = { ...prevNums }
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false}
+        return updatedNums
+      })
     } else if (finalNumCheck && firstNum && !ope && value != 0) {
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
+        const updatedNums = { ...prevNums }
         updatedNums[firstNumIndex] = {
           ...updatedNums[firstNumIndex],
           isEnabled: true,
-        };
-        return updatedNums;
-      });
+        }
+        return updatedNums
+      })
       setNums((prevNums) => {
-        const updatedNums = { ...prevNums };
-        updatedNums[index] = { ...updatedNums[index], isEnabled: false };
-        return updatedNums;
-      });
-      setFirstNum(value);
-      setFirstNumIndex(index);
-      setSecondNum("");
-      setShowResult(false); // Reset showResult when selecting a new first number
+        const updatedNums = { ...prevNums }
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false }
+        return updatedNums
+      })
+      setFirstNum(value)
+      setFirstNumIndex(index)
+      setSecondNum("")
+      setShowResult(false) // Reset showResult when selecting a new first number
     } else if (finalNumCheck && ope && value != 0) {
-      setSecondNum(value);
-      setSecondNumIndex(index);
-      setShowResult(true); // Show the result on the second number button
+      setSecondNum(value)
+      setSecondNumIndex(index)
+      setShowResult(true) // Show the result on the second number button
     }
   }
   useEffect(() => {
     if (firstNum && ope && secondNum && showResult) {
-      handleCalculate();
+      handleCalculate()
     }
-  }, [secondNum, ope, showResult]);
+  }, [secondNum, ope, showResult])
 
   function backBtn(){
     setSolutionShow(false)
@@ -261,9 +262,9 @@ function App() {
       const previousNumsState = newNumHistory.pop()
       const updatedNums = {...previousNumsState}
       Object.keys(updatedNums).forEach((index) => {
-        updatedNums[index] = { ...updatedNums[index], isEnabled: true };
+        updatedNums[index] = { ...updatedNums[index], isEnabled: true }
       })
-      setNums(updatedNums);
+      setNums(updatedNums)
     }
   }
 
@@ -284,18 +285,18 @@ function App() {
   
   function handleAnswer() {
     if(finalNumCheck){
-    const availableNumbers = Object.values(nums).filter(num => num.value != 0);
+    const availableNumbers = Object.values(nums).filter(num => num.value != 0)
 
     if (availableNumbers.length > 0) {
       // Find the nearest number to the target number
       const nearestNumber = availableNumbers.reduce((closest, num) => {
-        const diff1 = Math.abs(finalNum - num.value);
-        const diff2 = Math.abs(finalNum - closest.value);
-        return diff1 < diff2 ? num : closest;
-      });
+        const diff1 = Math.abs(finalNum - num.value)
+        const diff2 = Math.abs(finalNum - closest.value)
+        return diff1 < diff2 ? num : closest
+      })
 
-    const score = Math.abs(finalNum - nearestNumber.value);
-    setScore(score);
+    const score = Math.abs(finalNum - nearestNumber.value)
+    setScore(score)
     setBest(nearestNumber.value)
     if(score === 0){
       setPoints(10)
@@ -309,10 +310,10 @@ function App() {
     
     } else {
       // If no numbers left, calculate score based on the last remaining number
-      const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0);
+      const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0)
       if (lastRemainingNumber) {
-        const score = Math.abs(finalNum - lastRemainingNumber.value);
-        setScore(score);
+        const score = Math.abs(finalNum - lastRemainingNumber.value)
+        setScore(score)
         setBest(lastRemainingNumber.value)
         if(score === 0){
           setPoints(10)
@@ -325,14 +326,14 @@ function App() {
         }
       } else {
         // In case of unexpected scenario where there are no numbers left, set score to 0
-        setScore(0);
+        setScore(0)
       }
     }
-    setDisplayScore(true);
-    setAreButtonsDisabled(true);
-    setFirstNum("");
-    setOpe("");
-    setSecondNum("");
+    setDisplayScore(true)
+    setAreButtonsDisabled(true)
+    setFirstNum("")
+    setOpe("")
+    setSecondNum("")
     }
     
   }
@@ -354,14 +355,14 @@ function App() {
   const userOperations = Object.keys(operations).map((index)=>{
     const useOpe = operations[index]
     return <div key={index} className='everySol'>
-              <p >{useOpe.firstNum+useOpe.ope+useOpe.secondNum+"="+useOpe.count}</p>
+              <p >{useOpe.firstNum + " " + useOpe.ope + " " + useOpe.secondNum + " = " + useOpe.count}</p>
             </div>
   })
 
 
   function handleStartGame(mode) {
-    setSelectedMode(mode);
-    setStart(true);
+    setSelectedMode(mode)
+    setStart(true)
   }
 
   function handleStartSeconds(duration){

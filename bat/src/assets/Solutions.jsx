@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 function Solutions({ solutionShow, bestSolution, solutionUserShow, userOperations }) {
   return (
@@ -14,7 +14,7 @@ function Solutions({ solutionShow, bestSolution, solutionUserShow, userOperation
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Solutions;
+export default Solutions

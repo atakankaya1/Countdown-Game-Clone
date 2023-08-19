@@ -1,28 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 
 function NumbersComponent({ nums, setNums, handleNumClick, areButtonsDisabled, finalNumCheck }) {
   useEffect(() => {
     
       Object.keys(nums).forEach((index) => {
-        const num = nums[index];
+        const num = nums[index]
         if (!num.show) {
           setTimeout(() => {
             setNums((prevNums) => {
-              const updatedNums = { ...prevNums };
-              updatedNums[index] = { ...updatedNums[index], show: true };
-              return updatedNums;
-            });
-          }, num.delay);
+              const updatedNums = { ...prevNums }
+              updatedNums[index] = { ...updatedNums[index], show: true }
+              return updatedNums
+            })
+          }, num.delay)
         }
-      });
+      })
     
-  }, [nums]);
+  }, [nums])
 
   return (
     <div className="numbers">
       {Object.keys(nums).map((index) => {
-        const num = nums[index];
-        let classNames = num.isEnabled ? 'num-box' : 'num-box-disabled';
+        const num = nums[index]
+        let classNames = num.isEnabled ? 'num-box' : 'num-box-disabled'
 
         return (
           <button
@@ -34,10 +34,10 @@ function NumbersComponent({ nums, setNums, handleNumClick, areButtonsDisabled, f
           >
             {num.value === 0 ? '' : num.show ? num.value : '?'}
           </button>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
 
-export default NumbersComponent;
+export default NumbersComponent
