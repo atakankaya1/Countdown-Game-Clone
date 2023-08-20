@@ -8,9 +8,13 @@ import Solutions from './assets/Solutions'
 import logo from "./assets/countdown-log.png"
 import Alert from './assets/Alert'
 import PickNumber from './assets/PickNumber'
+import ScorePage from './assets/ScorePage'
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
+// handleRound içine round sayısının sonuna ulaşılınca yapılacak logic i yaz
+// nextRound basınca fetch request numara seçilmeden atılıyor!
+// ayrı bir sayfa olarak
 // bazı stateler gereksiz olabilir. displayScore gibi
 // app.css ve index.css farklılıklarını gider
 // finalNumCheck ve son num-box değerleri ile bir mantık kurulabilir.
@@ -51,7 +55,8 @@ function App() {
   const [numberPicked, setNumberPicked] = useState(false)
   const [currentRound, setCurrentRound] = useState(1)
   const [gameInProgress, setGameInProgress] = useState(false)
-  const [tract, setTract] = useState(1)
+  const [scorePage, setscorePage] = useState(false)
+ 
   
 
   //fetch Request
@@ -363,7 +368,6 @@ function App() {
         setSolutionShow(false)
         setDisplayScore(false)
         setExactSolution(true)
-
         setFinalNumCheck(false)
         setFinalNum("")
         setOriginalNums({})
@@ -380,7 +384,9 @@ function App() {
         setOperations([])
         setShowAlert(false)
         setCurrentRound(prevCurrentRound => prevCurrentRound + 1)
-      }  
+      } else {
+        setscorePage(true)
+      }
   }
 
   function handleOpe(value){
@@ -442,6 +448,10 @@ function App() {
     setStart(true)
     setGameInProgress(true)
   }
+
+  function atakan(){
+    setStart(false)
+  }
   
   
 
@@ -460,6 +470,10 @@ function App() {
           onStartGame={handleStartGame}
         />
         :
+        scorePage ?
+        <ScorePage
+        main={atakan}
+        />:
         <div className="main">
         <div className= {showAlert ? 'alert' : "alert-hidden"}>
           <Alert 
