@@ -1,36 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-function StartGame({ onStartGame, duration, iniSecond }) {
-    const [custom, setCustom] = useState(false)
-    function customGame(){
-        setCustom(true)
-    }
+function StartGame({ duration, iniSecond, rounds, startBtn }) {
 
-    const customModes = (
+
+    const roundsSelect = (
         <div className="mode-select">
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                Easy
+            <button className="mode-btn" onClick={() => rounds(1)}>
+                1 Round
             </button>
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                1 Large
-            </button>
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                2 Large
-            </button>
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                3 Large
-            </button>
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                4 Large
-            </button>
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                6 Small
-            </button>
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                Random
-            </button>
-            <button className="mode-btn" id="back" onClick={() => setCustom(false)}>
-                Go Back
+            <button className="mode-btn" onClick={() => rounds(3)}>
+                3 Rounds
+            </button><button className="mode-btn" onClick={() => rounds(5)}>
+                5 Rounds
+            </button><button className="mode-btn" onClick={() => rounds(10)}>
+                10 Rounds
             </button>
         </div>
     )
@@ -40,20 +23,7 @@ function StartGame({ onStartGame, duration, iniSecond }) {
     <div className="start-main">
       <h1>Welcome to Countdown</h1>
       <h3>When you're ready, select a mode:</h3>
-      {!custom ? (
-                <div className="mode-select">
-                    <button className="mode-btn" onClick={() => onStartGame("normal")}>
-                        Classic Mode
-                    </button>
-                    <button className="mode-btn" onClick={customGame}>
-                        Customize
-                    </button>
-                </div>
-            ) : (
-                customModes
-            )}
-      
-      
+        {roundsSelect}
       <h3>Select countdown duration:</h3>
       <div className='select'>
         <select  value={iniSecond} onChange={(e) => duration(Number(e.target.value))}>
@@ -63,6 +33,8 @@ function StartGame({ onStartGame, duration, iniSecond }) {
             <option value={-1}>Unlimited</option>
         </select>
       </div>
+
+      <button onClick={startBtn}>Start</button>
 
       
       

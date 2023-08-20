@@ -7,6 +7,7 @@ import EndGame from './assets/EndGame'
 import Solutions from './assets/Solutions'
 import logo from "./assets/countdown-log.png"
 import Alert from './assets/Alert'
+import PickNumber from './assets/PickNumber'
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
@@ -45,6 +46,8 @@ function App() {
   const [alertSub, setAlertSub] = useState(false)
   const [alertDiv, setAlertDiv] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [maxRounds, setMaxRounds] = useState(1)
+  const [numberPicked, setNumberPicked] = useState(false)
 
   //fetch Request
   
@@ -92,7 +95,7 @@ function App() {
           console.error('Error fetching data:', error)
         })
     }
-  }, [start, selectedMode, exactSolution])
+  }, [numberPicked, selectedMode, exactSolution])
 
   /* if we want score to be display when there is only one number left.
   useEffect(() => {
@@ -362,7 +365,8 @@ function App() {
 
   function handleStartGame(mode) {
     setSelectedMode(mode)
-    setStart(true)
+    setNumberPicked(true)
+    
   }
 
   function handleStartSeconds(duration){
@@ -386,6 +390,15 @@ function App() {
     setAlertSub(false)
     setAlertDiv(false)
   }
+
+  function rounds(round){
+    setMaxRounds(round)
+  }
+
+  function startBtn(){
+    setNumberPicked(false)
+    setStart(true)
+  }
   
   
 
@@ -394,11 +407,16 @@ function App() {
       {!start ?
 
        <StartGame
-          onStartGame={handleStartGame} 
+          rounds={rounds}
           duration={handleStartSeconds} 
           iniSecond={seconds} 
+          startBtn={startBtn}
         /> :
-        
+          !numberPicked ?
+        <PickNumber
+          onStartGame={handleStartGame}
+        />
+        :
         <div className="main">
         <div className= {showAlert ? 'alert' : "alert-hidden"}>
           <Alert 
