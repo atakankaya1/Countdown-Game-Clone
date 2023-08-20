@@ -46,8 +46,13 @@ function App() {
   const [alertSub, setAlertSub] = useState(false)
   const [alertDiv, setAlertDiv] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+
   const [maxRounds, setMaxRounds] = useState(1)
   const [numberPicked, setNumberPicked] = useState(false)
+  const [currentRound, setCurrentRound] = useState(1)
+  const [gameInProgress, setGameInProgress] = useState(false)
+  const [tract, setTract] = useState(1)
+  
 
   //fetch Request
   
@@ -106,7 +111,12 @@ function App() {
   }, [nums])
   */
 
+    console.log("max:", maxRounds)
+    console.log("cur:", currentRound)
+    console.log("prog:", gameInProgress)
   //functions
+
+  
 
   function handlePageClick() {
     setShowAlert(false)
@@ -301,6 +311,7 @@ function App() {
     const score = Math.abs(finalNum - nearestNumber.value)
     setScore(score)
     setBest(nearestNumber.value)
+
     if(score === 0){
       setPoints(10)
     } else if(score > 0 && score <= 5){
@@ -318,6 +329,7 @@ function App() {
         const score = Math.abs(finalNum - lastRemainingNumber.value)
         setScore(score)
         setBest(lastRemainingNumber.value)
+      
         if(score === 0){
           setPoints(10)
         } else if(score > 0 && score <= 5){
@@ -337,8 +349,38 @@ function App() {
     setFirstNum("")
     setOpe("")
     setSecondNum("")
+    if (!gameInProgress) {
+      setGameInProgress(true)
+      handleRound()
+    }
     }
     
+  }
+
+  function handleRound(){
+      if(currentRound < maxRounds ){
+        setNumberPicked(false)
+        setSolutionShow(false)
+        setDisplayScore(false)
+        setExactSolution(true)
+
+        setFinalNumCheck(false)
+        setFinalNum("")
+        setOriginalNums({})
+        setNums({})
+        setNumHistory([])
+        setBest()
+        setPoints(0)
+        setShowResult(false)
+        setSolutionUserShow(false)
+        setSolution([])
+        setScore()
+        setNumHistory([])
+        setAreButtonsDisabled(false)
+        setOperations([])
+        setShowAlert(false)
+        setCurrentRound(prevCurrentRound => prevCurrentRound + 1)
+      }  
   }
 
   function handleOpe(value){
@@ -398,6 +440,7 @@ function App() {
   function startBtn(){
     setNumberPicked(false)
     setStart(true)
+    setGameInProgress(true)
   }
   
   
@@ -460,6 +503,8 @@ function App() {
               revealSolution={revealSolution}
               revealUserSolution={revealUserSolution}
               backBtn={backBtn}
+              gameInProgress={gameInProgress}
+              handleRound={handleRound}
             />:
 
             <Operators

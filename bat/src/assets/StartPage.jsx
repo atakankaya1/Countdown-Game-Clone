@@ -34,7 +34,7 @@ function StartGame({ duration, iniSecond, rounds, startBtn }) {
         </select>
       </div>
 
-      <button onClick={startBtn}>Start</button>
+      <button className='start-btn' onClick={startBtn}>Start</button>
 
       
       

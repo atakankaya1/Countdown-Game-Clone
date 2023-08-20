@@ -793,4 +793,11 @@ select::-ms-expand {
 .select:hover::after {
   color: #d9d9d9;
 }
+
+.start-btn{
+  margin-top: 2rem;
+  width: 10rem;
+  align-self: center;
+  height: 3rem;
+}
   
