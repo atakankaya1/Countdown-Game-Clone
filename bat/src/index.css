@@ -44,7 +44,6 @@ body{
   max-height: 53.8rem;
   
 }
-  
 
   .all-nums-display {
     align-items: center;
@@ -516,18 +515,35 @@ body{
       width: 80%;
       justify-content: center;
   }
+
+  .end-next-btns{
+    display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 1rem;
+      min-width: 16rem;
+      
+  }
+
   .end-game{
     display:flex;
     flex-direction: row;
     justify-content: space-between;
     width: 80%;
+    
   }
+
     .end-solution-btns{
       display: flex;
       flex-direction: row;
       justify-content: space-around;
       gap: 1rem;
-      margin-right: -9rem;
+      min-width: 16rem;
+    }
+
+    .end-solution-btns-hidden{
+      visibility: hidden;
+      min-width: 16rem;
     }
     .end-game-solution{
       align-items: center;
@@ -709,7 +725,8 @@ body{
 
 }
 
-.mode-btn{
+.mode-btn,
+.round-btn{
       align-items: center;
       background-color: #d9d9d9;
       color: #000000;
@@ -743,6 +760,12 @@ body{
     background-image: linear-gradient(90deg, rgb(233, 153, 153), rgb(233, 153, 153)),
     linear-gradient(180deg, #6a9098, #d0f6fe);
   }
+
+.round-btn:disabled{
+  background-color: greenyellow;
+      background-image: linear-gradient(90deg, greenyellow, greenyellow),
+      linear-gradient(180deg, #6a9098, #d0f6fe);
+}
 
 select {
   /* Reset Select */
@@ -799,5 +822,28 @@ select::-ms-expand {
   width: 10rem;
   align-self: center;
   height: 3rem;
+}
+
+.score-page-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.score-page-container h2{
+  margin-top: 10rem;
+}
+
+.score-page-container p{
+  margin: 5rem auto;
+  animation: pulse 2s infinite;
+}
+
+.score-page-container button{
+  height: 2rem;
+  width: 10rem;
+  position: fixed;
+  top: 27rem;
 }
   

@@ -12,9 +12,10 @@ import ScorePage from './assets/ScorePage'
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// handleRound içine round sayısının sonuna ulaşılınca yapılacak logic i yaz
-// nextRound basınca fetch request numara seçilmeden atılıyor!
-// ayrı bir sayfa olarak
+// handleRound içine round sayısının sonuna ulaşılınca yapılacak logic i yaz (yazıldı, test ediliyor).
+// nextRound basınca fetch request numara seçilmeden atılıyor! sonra tekrar atılıyor.
+
+
 // bazı stateler gereksiz olabilir. displayScore gibi
 // app.css ve index.css farklılıklarını gider
 // finalNumCheck ve son num-box değerleri ile bir mantık kurulabilir.
@@ -56,6 +57,7 @@ function App() {
   const [currentRound, setCurrentRound] = useState(1)
   const [gameInProgress, setGameInProgress] = useState(false)
   const [scorePage, setscorePage] = useState(false)
+  const [totalPoints, setTotalPoints] = useState(0)
  
   
 
@@ -90,9 +92,9 @@ function App() {
             show:true
           }))
 
-          setTimeout(() => {
+          if(numberPicked === true){setTimeout(() => {
             setFinalNumCheck(true)
-          }, 5500)
+          }, 5500)}
           setNums(requestedNumbers)
           setOriginalNums(requestedNumbersRes)
           setSolution(data.bestSolution)
@@ -116,9 +118,7 @@ function App() {
   }, [nums])
   */
 
-    console.log("max:", maxRounds)
-    console.log("cur:", currentRound)
-    console.log("prog:", gameInProgress)
+  console.log(numberPicked)
   //functions
 
   
@@ -250,6 +250,7 @@ function App() {
   }, [secondNum, ope, showResult])
 
   function backBtn(){
+    setNumberPicked(false)
     setSolutionShow(false)
     setDisplayScore(false)
     setExactSolution(true)
@@ -261,6 +262,7 @@ function App() {
     setNumHistory([])
     setBest()
     setPoints(0)
+    setTotalPoints(0)
     setShowResult(false)
     setSolutionUserShow(false)
     setSolution([])
@@ -364,6 +366,7 @@ function App() {
 
   function handleRound(){
       if(currentRound < maxRounds ){
+        setTotalPoints(prev => prev+points)
         setNumberPicked(false)
         setSolutionShow(false)
         setDisplayScore(false)
@@ -385,6 +388,7 @@ function App() {
         setShowAlert(false)
         setCurrentRound(prevCurrentRound => prevCurrentRound + 1)
       } else {
+        setTotalPoints(prev => prev+points)
         setscorePage(true)
       }
   }
@@ -449,8 +453,29 @@ function App() {
     setGameInProgress(true)
   }
 
-  function atakan(){
+  function main(){
     setStart(false)
+    setNumberPicked(false)
+    setSolutionShow(false)
+    setDisplayScore(false)
+    setExactSolution(true)
+    setStart(false)
+    setFinalNumCheck(false)
+    setFinalNum("")
+    setOriginalNums({})
+    setNums({})
+    setNumHistory([])
+    setBest()
+    setPoints(0)
+    setTotalPoints(0)
+    setShowResult(false)
+    setSolutionUserShow(false)
+    setSolution([])
+    setScore()
+    setNumHistory([])
+    setAreButtonsDisabled(false)
+    setOperations([])
+    setShowAlert(false)
   }
   
   
@@ -472,7 +497,9 @@ function App() {
         :
         scorePage ?
         <ScorePage
-        main={atakan}
+        main={main}
+        points={totalPoints}
+        rounds={maxRounds}
         />:
         <div className="main">
         <div className= {showAlert ? 'alert' : "alert-hidden"}>
@@ -519,6 +546,8 @@ function App() {
               backBtn={backBtn}
               gameInProgress={gameInProgress}
               handleRound={handleRound}
+              currentRound={currentRound}
+              maxRounds={maxRounds}
             />:
 
             <Operators

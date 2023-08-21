@@ -1,9 +1,10 @@
 import React from 'react'
 
-function EndGame({ points, revealSolution, revealUserSolution, backBtn, gameInProgress, handleRound }) {
+function EndGame({ points, revealSolution, revealUserSolution, backBtn, gameInProgress, handleRound, currentRound, maxRounds }) {
+  //points-area kullanılmıyor CSS
   return (
     <div className="end-game">
-      <div className="end-solution-btns">
+      <div className={points===10 ? "end-solution-btns-hidden" : "end-solution-btns"}>
         <button className="end-game-solution" onClick={revealSolution}>
           Reveal Solution
         </button>
@@ -11,18 +12,30 @@ function EndGame({ points, revealSolution, revealUserSolution, backBtn, gameInPr
           Your Solution
         </button>
       </div>
+    
+    
+      
 
       <div className="points-area">
-        <p className="end-game-pr">Exact Solution is Possible!</p>
-        <p className="end-game-po">{`+${points} Points`}</p>
+        {points===10 ?
+        <>
+          <p className="end-game-pr">Congratulations!</p>
+          <p className="end-game-po">{`+${points} Points`}</p> 
+        </>:
+        <>
+          <p className="end-game-pr">Exact Solution was Possible!</p>
+          <p className="end-game-po">{`+${points} Points`}</p>
+        </>
+      }
+        
       </div>
       {gameInProgress ?
-      <div>
+      <div className="end-next-btns">
         <button className="back-button" onClick={backBtn}>
             Quit Round
         </button>
         <button className="back-button" onClick={handleRound}>
-            Next Round
+            {currentRound === maxRounds ? "Finish Round" : "Next Round"}
         </button>
       </div> : 
       <button className="back-button" onClick={backBtn}>

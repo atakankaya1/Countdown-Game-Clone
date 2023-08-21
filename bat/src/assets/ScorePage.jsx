@@ -1,9 +1,10 @@
 import React from 'react'
 
-function ScorePage({ main }) {
+function ScorePage({ main, points, rounds }) {
   return (
-    <div className="solutions">
-     <h2>ScorePage</h2>
+    <div className="score-page-container">
+     <h2>You finished the {rounds} {rounds === 1 ? "round" : "rounds"}</h2>
+     <p>Your total points: {points} / {rounds*10}</p>
      <button onClick={main}>Go back</button>
     </div>
   )
