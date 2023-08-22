@@ -1,257 +1,567 @@
 import { useState, useEffect } from 'react'
-import Countdown from './assets/Countdown'
+import StartGame from "./assets/StartPage"
+import NumbersComponent from './assets/NumbersComponent'
+import MainDisplayNums from './assets/MainDisplayNums'
+import Operators from './assets/Operators'
+import EndGame from './assets/EndGame'
+import Solutions from './assets/Solutions'
+import logo from "./assets/countdown-log.png"
+import Alert from './assets/Alert'
+import PickNumber from './assets/PickNumber'
+import ScorePage from './assets/ScorePage'
+
+const BASE_HOST = "http://localhost:8080/api/game"
+
+// handleRound içine round sayısının sonuna ulaşılınca yapılacak logic i yaz (yazıldı, test ediliyor).
+// nextRound basınca fetch request numara seçilmeden atılıyor! sonra tekrar atılıyor.
 
 
-//timer eklenmeli
-//delete button operation sonrasında ulaşılan numarayla düzgün çalışmıyor
-//tam bölünmüyorsa bölmesin
-//eksi çıkan işlemlerde display kısmında işlemi düzgün göstersin(first ve secondNum değişimi)
-
+// bazı stateler gereksiz olabilir. displayScore gibi
+// app.css ve index.css farklılıklarını gider
+// finalNumCheck ve son num-box değerleri ile bir mantık kurulabilir.
 
 import './App.css'
 
 function App() {
   
-  const [start, setStart] = useState(true)
+  const [start, setStart] = useState(false)
   const [firstNum, setFirstNum] = useState("")
   const [secondNum, setSecondNum] = useState("")
   const [ope, setOpe] = useState("")
-  const [operations, setOperations] = useState([]);
+  const [operations, setOperations] = useState([])
   const [finalNum, setFinalNum] = useState("")
-  const [nums, setNums] = useState([])
-  const [buttonDisabled, setButtonDisabled] = useState(Array(nums.length).fill(false))
-  const [displayButtonDisabled, setDisplayButtonDisabled] = useState([])
-  const [score, setScore] = useState("")
+  const [finalNumCheck, setFinalNumCheck] = useState(false)
+  const [nums, setNums] = useState({})
+  const [originalNums, setOriginalNums] = useState({})
+  const [score, setScore] = useState()
   const [displayScore, setDisplayScore] = useState(false)
-  
-  
+  const [firstNumIndex, setFirstNumIndex] = useState()
+  const [secondNumIndex, setSecondNumIndex] = useState()
+  const [solution, setSolution] = useState([])
+  const [solutionShow, setSolutionShow] = useState(false)
+  const [solutionUserShow, setSolutionUserShow] = useState(false)
+  const [exactSolution, setExactSolution] = useState(true)
+  const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
+  const [showResult, setShowResult] = useState(false)
+  const [selectedMode, setSelectedMode] = useState("normal")
+  const [numHistory, setNumHistory] = useState([])
+  const [best, setBest] = useState()
+  const [points, setPoints] = useState(0)
+  const [seconds, SetSeconds] = useState(30)
+  const [alertSub, setAlertSub] = useState(false)
+  const [alertDiv, setAlertDiv] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
+
+  const [maxRounds, setMaxRounds] = useState(1)
+  const [numberPicked, setNumberPicked] = useState(false)
+  const [currentRound, setCurrentRound] = useState(1)
+  const [gameInProgress, setGameInProgress] = useState(false)
+  const [scorePage, setscorePage] = useState(false)
+  const [totalPoints, setTotalPoints] = useState(0)
+ 
   
 
+  //fetch Request
+  
   useEffect(() => {
-    setFinalNum(Math.floor((Math.random()*10) * 34))
-    for(let i=0; i<3;i++){
-      setNums(prevNums => [...prevNums, (Math.floor((Math.random() * 10))+1)])
-    }
-  }, [])
+    if (start) {
+      const fetchUrl = selectedMode === "easy" ? `${BASE_HOST}/easy` : BASE_HOST
+  
+      fetch(fetchUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          
+          return response.json()
+        })
+        .then((data) => {
+          console.log(data)
+          setFinalNum(data.target)
+          const requestedNumbers = data.numbers.map((n, index) => ({
+            value: n,
+            isEnabled: true,
+            delay: (index+1)*750,
+            show:false
+          }))
 
-   
+          const requestedNumbersRes = data.numbers.map((n, index) => ({
+            value: n,
+            isEnabled: true,
+            delay: 0,
+            show:true
+          }))
+
+          if(numberPicked === true){setTimeout(() => {
+            setFinalNumCheck(true)
+          }, 5500)}
+          setNums(requestedNumbers)
+          setOriginalNums(requestedNumbersRes)
+          setSolution(data.bestSolution)
+          if (!data.isSolutionExact) {
+            setExactSolution(!exactSolution)
+          }
+         
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error)
+        })
+    }
+  }, [numberPicked, selectedMode, exactSolution])
+
+  /* if we want score to be display when there is only one number left.
+  useEffect(() => {
+    const availableNumbers = Object.values(nums).filter(num => num.value != 0)
+    if (availableNumbers.length === 1) {
+      handleAnswer()
+    }
+  }, [nums])
+  */
+
+  console.log(numberPicked)
   //functions
 
-  function result(a,b,c){
-    if(b === "+"){
-      return +a + +c
-    }else if(b === "-"){
-      if(a <= c){
-        return c-a
-      }else{
-        return a-c
-      }
-    } else if (b === "*"){
-      return a*c
-    } else {
-      return (a/c).toFixed(2)
-    }
-  }
-
-  function handleCalculate(){
-    const calculatedResult  = result(firstNum,ope,secondNum)
-    const operation = {
-      firstNum,
-      ope,
-      secondNum,
-      count: calculatedResult 
-    }
-    setOperations(prevOperations => [...prevOperations, operation])
-    setFirstNum("")
-    setOpe("")
-    setSecondNum("")
-  };
-
-  function handleNumClick(value, index){
-    if(firstNum===""){
-      setFirstNum(value)
-    } else if(ope !== ""){
-      setSecondNum(value)
-    } else {
-      setFirstNum(value)
-    }
-    setButtonDisabled((prevButtonDisabled) => {
-      const newButtonDisabled = [...prevButtonDisabled];
-      newButtonDisabled[index] = true;
-      return newButtonDisabled;
-    })
-  }
   
-  function handleNewNumberClick(value, index){
-    if(firstNum===""){
-      setFirstNum(value)
-    } else if(ope !== ""){
-      setSecondNum(value)
+
+  function handlePageClick() {
+    setShowAlert(false)
+    setAlertSub(false)
+    setAlertDiv(false)
+  }
+
+  useEffect(() => {
+    if (showAlert) {
+      document.addEventListener('click', handlePageClick)
     } else {
-      setFirstNum(value)
+      document.removeEventListener('click', handlePageClick)
     }
-    setDisplayButtonDisabled((prevDisplayButtonDisabled) => {
-      const newButtonDisabled = [...prevDisplayButtonDisabled, false];
-      newButtonDisabled[index] = true;
-      return newButtonDisabled;
-    })
+
+    return () => {
+      document.removeEventListener('click', handlePageClick)
+    }
+  }, [showAlert])
+
+  function result(firstNumber, operator, secondNumber) {
+    if (operator === "+") {
+      return +firstNumber + +secondNumber
+    } else if (operator === "-") {
+      if (firstNumber <= secondNumber) {
+        setAlertSub(true)
+        setShowAlert(true)
+        return  false
+      } else {
+        return firstNumber - secondNumber
+      }
+    } else if (operator === "*") {
+      return firstNumber * secondNumber
+    } else {
+      if (firstNumber % secondNumber !== 0) {
+        setAlertDiv(true)
+        setShowAlert(true)
+        return false
+      } else {
+        return firstNumber / secondNumber
+      }
+    }
   }
 
-  function handleAnswer(){
-    const finalCount = operations.slice(-1)
-    console.log(finalCount[0].count)
-    const score = Number(finalNum) - Number(finalCount[0].count)
-
-    setScore(score)
-    setDisplayScore(true)
-    
+  function handleCalculate() {
+    const calculatedResult = result(firstNum, ope, secondNum)
+    if(firstNum){
+      if (calculatedResult !== false) {
+        const operation = {
+          firstNum,
+          ope,
+          secondNum,
+          count: calculatedResult,
+        }
+        setNumHistory((prevNumHistory) => [...prevNumHistory, nums])
+        setNums((prevNums) => {
+          return {
+            ...prevNums,
+            [secondNumIndex]: { value: calculatedResult, isEnabled: true },
+          }
+        })
+        setNums((prevNums) => {
+          return {
+            ...prevNums,
+            [firstNumIndex]: { value: 0, isEnabled: true },
+          }
+        })
+        setOperations((prevOperations) => [...prevOperations, operation])
+        setFirstNum("")
+        setOpe("")
+        setSecondNum("")
+      } else {
+        setFirstNum("")
+        setOpe("")
+        setSecondNum("")
+        setNums((prevNums) => {
+          const updatedNums = { ...prevNums }
+          updatedNums[firstNumIndex] = { ...updatedNums[firstNumIndex], isEnabled: true }
+          return updatedNums
+        })
+        setNums((prevNums) => {
+          const updatedNums = { ...prevNums }
+          updatedNums[secondNumIndex] = { ...updatedNums[secondNumIndex], isEnabled: true }
+          return updatedNums
+        })
+      }
+    }
   }
 
-  function handleDelete(){
-    //delete'i operasyondan gelen numarayla çalıştırma problemi buradan kaynaklanıyor. delete buttonu kullandığında operasyon içinde alttan gelen bir numara varsa o değişmiyor. Önceki operasyon sonucu değişen button active oluyor.
-    if(firstNum && ope && secondNum){
+  function handleNumClick(value, index) {
+    if (finalNumCheck && firstNum === "" && value != 0) {
+      setFirstNum(value)
+      setFirstNumIndex(index)
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums }
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false}
+        return updatedNums
+      })
+    } else if (finalNumCheck && firstNum && !ope && value != 0) {
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums }
+        updatedNums[firstNumIndex] = {
+          ...updatedNums[firstNumIndex],
+          isEnabled: true,
+        }
+        return updatedNums
+      })
+      setNums((prevNums) => {
+        const updatedNums = { ...prevNums }
+        updatedNums[index] = { ...updatedNums[index], isEnabled: false }
+        return updatedNums
+      })
+      setFirstNum(value)
+      setFirstNumIndex(index)
       setSecondNum("")
-      setButtonDisabled((prevButtonDisabled) => {
-        const newButtonDisabled = [...prevButtonDisabled];
-        const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
-        if (lastDisabledIndex !== -1) {
-          newButtonDisabled[lastDisabledIndex] = false;
-        }
-        return newButtonDisabled;
-      })
-    } else if(firstNum && ope){
-      setOpe("")
-    } else if (firstNum){
-      setFirstNum("")
-      setButtonDisabled((prevButtonDisabled) => {
-        const newButtonDisabled = [...prevButtonDisabled];
-        const lastDisabledIndex = newButtonDisabled.lastIndexOf(true);
-        if (lastDisabledIndex !== -1) {
-          newButtonDisabled[lastDisabledIndex] = false;
-        }
-        return newButtonDisabled;
-      })
-    } else {
-
+      setShowResult(false) // Reset showResult when selecting a new first number
+    } else if (finalNumCheck && ope && value != 0) {
+      setSecondNum(value)
+      setSecondNumIndex(index)
+      setShowResult(true) // Show the result on the second number button
     }
   }
+  useEffect(() => {
+    if (firstNum && ope && secondNum && showResult) {
+      handleCalculate()
+    }
+  }, [secondNum, ope, showResult])
+
+  function backBtn(){
+    setNumberPicked(false)
+    setSolutionShow(false)
+    setDisplayScore(false)
+    setExactSolution(true)
+    setStart(false)
+    setFinalNumCheck(false)
+    setFinalNum("")
+    setOriginalNums({})
+    setNums({})
+    setNumHistory([])
+    setBest()
+    setPoints(0)
+    setTotalPoints(0)
+    setShowResult(false)
+    setSolutionUserShow(false)
+    setSolution([])
+    setScore()
+    setNumHistory([])
+    setAreButtonsDisabled(false)
+    setOperations([])
+    setShowAlert(false)
+  }
+ 
+  function handleUndo() {
+    if (numHistory.length > 0) {
+      const newOperation = [...operations]
+      setOperations(newOperation.slice(0,-1))
+      const newNumHistory = [...numHistory]
+      setNumHistory(newNumHistory.slice(0,-1))
+      const previousNumsState = newNumHistory.pop()
+      const updatedNums = {...previousNumsState}
+      Object.keys(updatedNums).forEach((index) => {
+        updatedNums[index] = { ...updatedNums[index], isEnabled: true }
+      })
+      setNums(updatedNums)
+    }
+  }
+
+  
+  
 
   function handleRestart(){
-    setFirstNum("")
-    setSecondNum("")
-    setOpe("")
-    setOperations([])
-    setButtonDisabled(Array(nums.length).fill(false))
-    setDisplayButtonDisabled([])
-    setDisplayScore(false)
+    if(finalNumCheck){
+      setNums(originalNums)
+      setNumHistory([])
+       setFirstNum("")
+       setSecondNum("")
+       setOpe("")
+       setOperations([])
+       setDisplayScore(false)
+    }
   }
+  
+  function handleAnswer() {
+    if(finalNumCheck){
+    const availableNumbers = Object.values(nums).filter(num => num.value != 0)
 
-  function gameOver(){
+    if (availableNumbers.length > 0) {
+      // Find the nearest number to the target number
+      const nearestNumber = availableNumbers.reduce((closest, num) => {
+        const diff1 = Math.abs(finalNum - num.value)
+        const diff2 = Math.abs(finalNum - closest.value)
+        return diff1 < diff2 ? num : closest
+      })
 
-    setDisplayButtonDisabled(displayButtonDisabled.map(()=>true))
-    setButtonDisabled(buttonDisabled.map(()=>true))
-//en başta array falselar ile dolu değil.(false'lar ile doldurulabilir)
-    const updatedArray1 = displayButtonDisabled.map(() => true);
-    setDisplayButtonDisabled(updatedArray1);
-//hepsini disable yapmıyor ama run dev'den kaynaklı olabilir. Preview'de görmek gerekir.
-    const updatedArray2 = buttonDisabled.map(()=>true);
-    setButtonDisabled(updatedArray2)
-
-
-    
-    const finalCount = operations.slice(-1)
-    const score = Number(finalNum) - Number(finalCount[0].count)
-
+    const score = Math.abs(finalNum - nearestNumber.value)
     setScore(score)
+    setBest(nearestNumber.value)
+
+    if(score === 0){
+      setPoints(10)
+    } else if(score > 0 && score <= 5){
+      setPoints(7)
+    } else if(score > 5 && score <=10 ){
+      setPoints(5)
+    } else {
+      setPoints(0)
+    }
+    
+    } else {
+      // If no numbers left, calculate score based on the last remaining number
+      const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0)
+      if (lastRemainingNumber) {
+        const score = Math.abs(finalNum - lastRemainingNumber.value)
+        setScore(score)
+        setBest(lastRemainingNumber.value)
+      
+        if(score === 0){
+          setPoints(10)
+        } else if(score > 0 && score <= 5){
+         setPoints(7)
+        } else if(score > 5 && score <=10 ){
+          setPoints(5)
+        } else {
+          setPoints(0)
+        }
+      } else {
+        // In case of unexpected scenario where there are no numbers left, set score to 0
+        setScore(0)
+      }
+    }
     setDisplayScore(true)
+    setAreButtonsDisabled(true)
+    setFirstNum("")
+    setOpe("")
+    setSecondNum("")
+    if (!gameInProgress) {
+      setGameInProgress(true)
+      handleRound()
+    }
+    }
+    
   }
 
-  //Numbers and Operation
-
-  const initialNums = nums.map((num, index)=>(
-    <button key={index} value={num} onClick={()=>handleNumClick(num, index)} disabled={buttonDisabled[index]}>{num}</button>
-  ))
-
-  const displayOperation =  operations.map((operation, index) => (
-    <div key={index} className="operations">
-      <p>
-        {`${operation.firstNum} ${operation.ope} ${operation.secondNum} = ${operation.count}`}
-      </p>
-      <button value={operation.count} onClick={()=>handleNewNumberClick(operation.count, index)} disabled={displayButtonDisabled[index]}>{operation.count}</button>
-    </div>
-  ))
-
-  const fourOpe = ["+","-","/","*"]
-
-  const fourOpeComp = fourOpe.map((op,index) => (
-  <button key={index} value={op} onClick={e => setOpe(e.target.value)}>{op}</button>)
-  )
-
-  const text = "you win!!"
-
-  console.log(`first:${firstNum}`)
-  console.log(`ope:${ope}`)
-  console.log(`second:${secondNum}`)
-
-  //startGame Component(unused for now as Component)
-  const startGame = function startPage(){
-    return(
-      <div>
-        <p>Welcome to Bir İşlem!</p>
-        <button onClick={()=>setStart(false)}>Start Game</button>
-      </div>
-    )
+  function handleRound(){
+      if(currentRound < maxRounds ){
+        setTotalPoints(prev => prev+points)
+        setNumberPicked(false)
+        setSolutionShow(false)
+        setDisplayScore(false)
+        setExactSolution(true)
+        setFinalNumCheck(false)
+        setFinalNum("")
+        setOriginalNums({})
+        setNums({})
+        setNumHistory([])
+        setBest()
+        setPoints(0)
+        setShowResult(false)
+        setSolutionUserShow(false)
+        setSolution([])
+        setScore()
+        setNumHistory([])
+        setAreButtonsDisabled(false)
+        setOperations([])
+        setShowAlert(false)
+        setCurrentRound(prevCurrentRound => prevCurrentRound + 1)
+      } else {
+        setTotalPoints(prev => prev+points)
+        setscorePage(true)
+      }
   }
+
+  function handleOpe(value){
+    if(firstNum){
+      setOpe(value)
+    } else {
+      setOpe("")
+    }
+  }
+ 
+  const bestSolution = solution.map(function(sol, index){
+    return <div key={index} className='everySol'> 
+              <p >{sol}</p>
+            </div>
+  })
+
+  const userOperations = Object.keys(operations).map((index)=>{
+    const useOpe = operations[index]
+    return <div key={index} className='everySol'>
+              <p >{useOpe.firstNum + " " + useOpe.ope + " " + useOpe.secondNum + " = " + useOpe.count}</p>
+            </div>
+  })
+
+
+  function handleStartGame(mode) {
+    setSelectedMode(mode)
+    setNumberPicked(true)
+    
+  }
+
+  function handleStartSeconds(duration){
+    SetSeconds(duration)
+  }
+
+  function revealSolution(){
+    if(score || score===0){
+      setSolutionShow(!solutionShow)
+    }
+  }
+
+  function revealUserSolution(){
+    if(score || score===0){
+      setSolutionUserShow(!solutionUserShow)
+    }
+  }
+
+  function alertShow(){
+    setShowAlert(false)
+    setAlertSub(false)
+    setAlertDiv(false)
+  }
+
+  function rounds(round){
+    setMaxRounds(round)
+  }
+
+  function startBtn(){
+    setNumberPicked(false)
+    setStart(true)
+    setGameInProgress(true)
+  }
+
+  function main(){
+    setStart(false)
+    setNumberPicked(false)
+    setSolutionShow(false)
+    setDisplayScore(false)
+    setExactSolution(true)
+    setStart(false)
+    setFinalNumCheck(false)
+    setFinalNum("")
+    setOriginalNums({})
+    setNums({})
+    setNumHistory([])
+    setBest()
+    setPoints(0)
+    setTotalPoints(0)
+    setShowResult(false)
+    setSolutionUserShow(false)
+    setSolution([])
+    setScore()
+    setNumHistory([])
+    setAreButtonsDisabled(false)
+    setOperations([])
+    setShowAlert(false)
+  }
+  
+  
 
   return (
     <>
-      
-        {start ?
-        <div>
-        <h1>Welcome to Bir İşlem!</h1>
-        <p>You will have 30 seconds to find the number when you start the game.</p>
-        <h3>When you ready, start the game!</h3>
-        <button onClick={()=>setStart(false)}>Start Game</button>
-      </div> :
-        <div>
-      <h1>Bir İşlem</h1>
-      <h2>Number to Win: {finalNum}</h2>
-      <Countdown initialCountdownSeconds={30} onCountdownEnd={gameOver} />
-      
-      <h2>Numbers</h2>
-      <div>
-        {initialNums}
-      </div>
-      <h2>Operators</h2>
-      <div>
-        {fourOpeComp}
-        <button onClick={()=>handleCalculate()}>=</button>
-        <button onClick={()=>handleDelete()}>Del</button>
-        <button onClick={()=>handleRestart()}>Res</button>
-      </div>
-      <div>
-        <h2>Display: {ope ? firstNum+ope+secondNum : firstNum} </h2>
-        <div>
-      </div>
-        <h2>Operations : {displayOperation} </h2>
-      </div>
-      <div>
-        <button onClick={()=>handleAnswer()}>Submit Answer</button>
-      </div>
-      {displayScore ?
-      <div>
-      <p>Your Score is: {score===0 ? text : score}</p>
-      </div> :
-      <div>
+      {!start ?
 
-      </div>
-      }
-      </div>
-        }
+       <StartGame
+          rounds={rounds}
+          duration={handleStartSeconds} 
+          iniSecond={seconds} 
+          startBtn={startBtn}
+        /> :
+          !numberPicked ?
+        <PickNumber
+          onStartGame={handleStartGame}
+        />
+        :
+        scorePage ?
+        <ScorePage
+        main={main}
+        points={totalPoints}
+        rounds={maxRounds}
+        />:
+        <div className="main">
+        <div className= {showAlert ? 'alert' : "alert-hidden"}>
+          <Alert 
+          alertSub={alertSub} 
+          alertDiv={alertDiv} 
+          alertShow={alertShow}/>
+        </div>
         
-      
-      
-      
+        <Solutions
+          solutionShow={solutionShow}
+          bestSolution={bestSolution}
+          solutionUserShow={solutionUserShow}
+          userOperations={userOperations}
+        />
+        <div className="all-nums-display">
+          <div className="main-display">
+            <img className="logo" src={logo}/>
+            <MainDisplayNums
+              finalNumCheck={finalNumCheck}
+              best={best}
+              finalNum={finalNum}
+              handleAnswer={handleAnswer}
+              displayScore={displayScore}
+              seconds={seconds}
+            />
+          </div>
+          <div className="numbers">
+            <NumbersComponent
+              nums={nums}
+              setNums={setNums}
+              handleNumClick={handleNumClick}
+              areButtonsDisabled={areButtonsDisabled}
+              finalNumCheck={finalNumCheck}
+            />
+          </div>
+        </div>
+          {(score || score ===0) ? 
+
+            <EndGame
+              points={points}
+              revealSolution={revealSolution}
+              revealUserSolution={revealUserSolution}
+              backBtn={backBtn}
+              gameInProgress={gameInProgress}
+              handleRound={handleRound}
+              currentRound={currentRound}
+              maxRounds={maxRounds}
+            />:
+
+            <Operators
+              handleOpe={handleOpe}
+              areButtonsDisabled={areButtonsDisabled}
+              handleRestart={handleRestart}
+              handleUndo={handleUndo}
+              handleAnswer={handleAnswer}
+              firstNum={firstNum}
+            />
+
+          }
+        </div>
+      }
     </>
   )
 }
