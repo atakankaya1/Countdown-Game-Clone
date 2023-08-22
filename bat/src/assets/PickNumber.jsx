@@ -1,12 +1,9 @@
 import React from 'react'
 
-function PickNumber({ onStartGame}) {
+function PickNumber({ onStartGame, backBtn}) {
 
     const customModes = (
         <div className="mode-select">
-            <button className="mode-btn" onClick={() => onStartGame("easy")}>
-                Easy
-            </button>
             <button className="mode-btn" onClick={() => onStartGame("easy")}>
                 1 Large
             </button>
@@ -25,7 +22,7 @@ function PickNumber({ onStartGame}) {
             <button className="mode-btn" onClick={() => onStartGame("easy")}>
                 Random
             </button>
-            <button className="mode-btn" id="back" onClick={() => setCustom(false)}>
+            <button className="mode-btn" id="back" onClick={() => backBtn()}>
                 Go Back
             </button>
         </div>
@@ -33,7 +30,8 @@ function PickNumber({ onStartGame}) {
 
 
   return (
-    <div className="start-main"> 
+    <div className="pick-number"> 
+        <h2>Pick Numbers</h2>
         {customModes}   
     </div>
   )

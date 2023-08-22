@@ -12,13 +12,30 @@ import ScorePage from './assets/ScorePage'
 
 const BASE_HOST = "http://localhost:8080/api/game"
 
-// handleRound içine round sayısının sonuna ulaşılınca yapılacak logic i yaz (yazıldı, test ediliyor).
-// nextRound basınca fetch request numara seçilmeden atılıyor! sonra tekrar atılıyor.
+/*      *** Number Format ***
 
+20 "small numbers" (two each of 1 to 10)
+4  "large numbers" of 25, 50, 75 and 100 
+Some special episodes replace the large numbers with 12, 37, 62 and 87.
 
-// bazı stateler gereksiz olabilir. displayScore gibi
-// app.css ve index.css farklılıklarını gider
-// finalNumCheck ve son num-box değerleri ile bir mantık kurulabilir.
+        *** Fetch URLs ***
+
+  1 large
+  2 large
+  3 large
+  4 large
+  6 small
+  random
+  special(hard) --> random numbers but large numbers could also be (or at least one) 12, 37, 62, 87.
+
+        *** Points ***
+
+  +10 Points  ->  Exact Target
+  +7  Points  ->  1 and 5 from the Target
+  +5  Points  ->  6 and 10 from the Target
+
+*/
+
 
 import './App.css'
 
@@ -51,7 +68,6 @@ function App() {
   const [alertSub, setAlertSub] = useState(false)
   const [alertDiv, setAlertDiv] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
-
   const [maxRounds, setMaxRounds] = useState(1)
   const [numberPicked, setNumberPicked] = useState(false)
   const [currentRound, setCurrentRound] = useState(1)
@@ -117,11 +133,23 @@ function App() {
     }
   }, [nums])
   */
-
-  console.log(numberPicked)
-  //functions
-
   
+  // components to be created in another file
+
+  const bestSolution = solution.map(function(sol, index){
+    return <div key={index} className='everySol'> 
+              <p >{sol}</p>
+            </div>
+  })
+
+  const userOperations = Object.keys(operations).map((index)=>{
+    const useOpe = operations[index]
+    return <div key={index} className='everySol'>
+              <p >{useOpe.firstNum + " " + useOpe.ope + " " + useOpe.secondNum + " = " + useOpe.count}</p>
+            </div>
+  })
+
+  //functions
 
   function handlePageClick() {
     setShowAlert(false)
@@ -243,6 +271,7 @@ function App() {
       setShowResult(true) // Show the result on the second number button
     }
   }
+
   useEffect(() => {
     if (firstNum && ope && secondNum && showResult) {
       handleCalculate()
@@ -287,9 +316,6 @@ function App() {
       setNums(updatedNums)
     }
   }
-
-  
-  
 
   function handleRestart(){
     if(finalNumCheck){
@@ -401,20 +427,6 @@ function App() {
     }
   }
  
-  const bestSolution = solution.map(function(sol, index){
-    return <div key={index} className='everySol'> 
-              <p >{sol}</p>
-            </div>
-  })
-
-  const userOperations = Object.keys(operations).map((index)=>{
-    const useOpe = operations[index]
-    return <div key={index} className='everySol'>
-              <p >{useOpe.firstNum + " " + useOpe.ope + " " + useOpe.secondNum + " = " + useOpe.count}</p>
-            </div>
-  })
-
-
   function handleStartGame(mode) {
     setSelectedMode(mode)
     setNumberPicked(true)
@@ -478,8 +490,6 @@ function App() {
     setShowAlert(false)
   }
   
-  
-
   return (
     <>
       {!start ?
@@ -493,6 +503,7 @@ function App() {
           !numberPicked ?
         <PickNumber
           onStartGame={handleStartGame}
+          backBtn={backBtn}
         />
         :
         scorePage ?

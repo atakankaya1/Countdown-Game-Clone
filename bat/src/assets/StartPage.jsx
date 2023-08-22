@@ -4,7 +4,7 @@ function StartGame({ duration, iniSecond, rounds, startBtn }) {
 
     
 
-  const [selectedRound, setSelectedRound] = useState(null);
+  const [selectedRound, setSelectedRound] = useState(1);
 
   const roundButtons = [1, 3, 5, 10].map((round) => (
       <button
@@ -24,7 +24,7 @@ function StartGame({ duration, iniSecond, rounds, startBtn }) {
   return (
     <div className="start-main">
       <h1>Welcome to Countdown</h1>
-      <h3>When you're ready, select a mode:</h3>
+      <h3>When you're ready, select number of rounds:</h3>
       <div className='mode-select'>
         {roundButtons}
       </div>
