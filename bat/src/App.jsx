@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import './App.css'
 import StartGame from "./assets/StartPage"
 import NumbersComponent from './assets/NumbersComponent'
 import MainDisplayNums from './assets/MainDisplayNums'
@@ -11,33 +12,6 @@ import PickNumber from './assets/PickNumber'
 import ScorePage from './assets/ScorePage'
 
 const BASE_HOST = "http://localhost:8080/api/game"
-
-/*      *** Number Format ***
-
-20 "small numbers" (two each of 1 to 10)
-4  "large numbers" of 25, 50, 75 and 100 
-Some special episodes replace the large numbers with 12, 37, 62 and 87.
-
-        *** Fetch URLs ***
-
-  1 large
-  2 large
-  3 large
-  4 large
-  6 small
-  random
-  special(hard) --> random numbers but large numbers could also be (or at least one) 12, 37, 62, 87.
-
-        *** Points ***
-
-  +10 Points  ->  Exact Target
-  +7  Points  ->  1 and 5 from the Target
-  +5  Points  ->  6 and 10 from the Target
-
-*/
-
-
-import './App.css'
 
 function App() {
   
@@ -278,28 +252,28 @@ function App() {
     }
   }, [secondNum, ope, showResult])
 
-  function backBtn(){
-    setNumberPicked(false)
-    setSolutionShow(false)
-    setDisplayScore(false)
-    setExactSolution(true)
-    setStart(false)
-    setFinalNumCheck(false)
-    setFinalNum("")
-    setOriginalNums({})
-    setNums({})
-    setNumHistory([])
-    setBest()
-    setPoints(0)
-    setTotalPoints(0)
-    setShowResult(false)
-    setSolutionUserShow(false)
-    setSolution([])
-    setScore()
-    setNumHistory([])
-    setAreButtonsDisabled(false)
-    setOperations([])
-    setShowAlert(false)
+  function resetAppState() {
+    setNumberPicked(false);
+    setSolutionShow(false);
+    setDisplayScore(false);
+    setExactSolution(true);
+    setStart(false);
+    setFinalNumCheck(false);
+    setFinalNum("");
+    setOriginalNums({});
+    setNums({});
+    setNumHistory([]);
+    setBest();
+    setPoints(0);
+    setTotalPoints(0);
+    setShowResult(false);
+    setSolutionUserShow(false);
+    setSolution([]);
+    setScore();
+    setNumHistory([]);
+    setAreButtonsDisabled(false);
+    setOperations([]);
+    setShowAlert(false);
   }
  
   function handleUndo() {
@@ -393,25 +367,7 @@ function App() {
   function handleRound(){
       if(currentRound < maxRounds ){
         setTotalPoints(prev => prev+points)
-        setNumberPicked(false)
-        setSolutionShow(false)
-        setDisplayScore(false)
-        setExactSolution(true)
-        setFinalNumCheck(false)
-        setFinalNum("")
-        setOriginalNums({})
-        setNums({})
-        setNumHistory([])
-        setBest()
-        setPoints(0)
-        setShowResult(false)
-        setSolutionUserShow(false)
-        setSolution([])
-        setScore()
-        setNumHistory([])
-        setAreButtonsDisabled(false)
-        setOperations([])
-        setShowAlert(false)
+        resetAppState()
         setCurrentRound(prevCurrentRound => prevCurrentRound + 1)
       } else {
         setTotalPoints(prev => prev+points)
@@ -466,28 +422,8 @@ function App() {
   }
 
   function main(){
-    setStart(false)
-    setNumberPicked(false)
-    setSolutionShow(false)
-    setDisplayScore(false)
-    setExactSolution(true)
-    setStart(false)
-    setFinalNumCheck(false)
-    setFinalNum("")
-    setOriginalNums({})
-    setNums({})
-    setNumHistory([])
-    setBest()
-    setPoints(0)
-    setTotalPoints(0)
-    setShowResult(false)
-    setSolutionUserShow(false)
-    setSolution([])
-    setScore()
-    setNumHistory([])
-    setAreButtonsDisabled(false)
-    setOperations([])
-    setShowAlert(false)
+    resetAppState();
+    setscorePage(false);
   }
   
   return (
@@ -503,7 +439,7 @@ function App() {
           !numberPicked ?
         <PickNumber
           onStartGame={handleStartGame}
-          backBtn={backBtn}
+          backBtn={resetAppState}
         />
         :
         scorePage ?
@@ -554,7 +490,7 @@ function App() {
               points={points}
               revealSolution={revealSolution}
               revealUserSolution={revealUserSolution}
-              backBtn={backBtn}
+              backBtn={resetAppState}
               gameInProgress={gameInProgress}
               handleRound={handleRound}
               currentRound={currentRound}
