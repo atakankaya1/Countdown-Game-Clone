@@ -30,6 +30,8 @@ Division can only be performed if the result has no remainder.
 
 Fractions are not allowed, and only positive integers may be obtained as a result at any stage of the calculation.
 
+Player is able to undo the calculations or restart all operations.
+
 ![5](https://github.com/atakankaya1/Countdown-Game-Clone/assets/103039509/9c04a91f-ae07-433f-a978-492a96d78e55)
 
 When player submits his answer or his time is up, he gets points in accordance with his closeness to the target number.
