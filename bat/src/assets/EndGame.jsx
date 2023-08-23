@@ -13,8 +13,6 @@ function EndGame({ points, revealSolution, revealUserSolution, backBtn, gameInPr
         </button>
       </div>
     
-    
-      
 
       <div className="points-area">
         {points===10 ?
