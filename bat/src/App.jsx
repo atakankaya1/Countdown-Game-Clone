@@ -285,8 +285,6 @@ function App() {
     setNums({})
     setNumHistory([])
     setBest(0)
-    setPoints(0)
-    setTotalPoints(0)
     setShowResult(false)
     setSolutionUserShow(false)
     setSolution([])
@@ -352,7 +350,8 @@ function App() {
     }
     
   }
-
+  console.log("total:",totalPoints)
+  console.log("points:",points)
   function handleRound(){
       if(currentRound < maxRounds ){
         setTotalPoints(prev => prev+points)
@@ -414,10 +413,12 @@ function App() {
 
   function main(){
     resetAppState()
+    setPoints(0)
     setStart(false)
     setscorePage(false)
     setMaxRounds(1)
     setCurrentRound(1)
+    setTotalPoints(0)
   }
 
   function backBtn(){
@@ -425,6 +426,7 @@ function App() {
     setStart(false)
     setMaxRounds(1)
     setCurrentRound(1)
+    setTotalPoints(0)
   }
 
   
@@ -449,6 +451,7 @@ function App() {
         main={main}
         points={totalPoints}
         rounds={maxRounds}
+        duration={seconds}
         />:
         <div className="main">
         <div className= {showAlert ? 'alert' : "alert-hidden"}>
