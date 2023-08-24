@@ -48,6 +48,8 @@ function App() {
   const [gameInProgress, setGameInProgress] = useState(false)
   const [scorePage, setscorePage] = useState(false)
   const [totalPoints, setTotalPoints] = useState(0)
+  const [allScore, setAllScore] = useState([])
+  const [numbers, setNumbers] = useState()
  
   
 
@@ -74,6 +76,7 @@ function App() {
         })
         .then((data) => {
           console.log(data)
+          setNumbers(data.numbers)
           setFinalNum(data.target)
           const requestedNumbers = data.numbers.map((n, index) => ({
             value: n,
@@ -350,19 +353,35 @@ function App() {
     }
     
   }
-  console.log("total:",totalPoints)
-  console.log("points:",points)
+  
   function handleRound(){
       if(currentRound < maxRounds ){
         setTotalPoints(prev => prev+points)
+        const userScoreInfo = {
+          currentRound,
+          points,
+          numbers,
+          finalNum,
+          best
+        }
+        setAllScore([...allScore, userScoreInfo])
         resetAppState()
         setCurrentRound(prevCurrentRound => prevCurrentRound + 1)
+        
       } else {
+        const userScoreInfo = {
+          currentRound,
+          points,
+          numbers,
+          finalNum,
+          best
+        }
         setTotalPoints(prev => prev+points)
+        setAllScore([...allScore, userScoreInfo])
         setscorePage(true)
       }
   }
-
+console.log(allScore)
   
 
   function handleOpe(value){
@@ -419,6 +438,7 @@ function App() {
     setMaxRounds(1)
     setCurrentRound(1)
     setTotalPoints(0)
+    setAllScore([])
   }
 
   function backBtn(){
@@ -427,6 +447,7 @@ function App() {
     setMaxRounds(1)
     setCurrentRound(1)
     setTotalPoints(0)
+    setAllScore([])
   }
 
   
@@ -452,6 +473,7 @@ function App() {
         points={totalPoints}
         rounds={maxRounds}
         duration={seconds}
+        userInfo={allScore}
         />:
         <div className="main">
         <div className= {showAlert ? 'alert' : "alert-hidden"}>

@@ -858,7 +858,7 @@ select::-ms-expand {
   margin-top: 10rem;
 }
 
-.score-page-container p{
+.score-page-animated{
   margin: 5rem auto;
   animation: pulse 2s infinite;
 }
