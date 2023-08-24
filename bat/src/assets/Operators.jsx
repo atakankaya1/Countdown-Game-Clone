@@ -14,7 +14,6 @@ function Operators({ handleOpe, areButtonsDisabled, handleRestart, handleUndo, h
       {op}
     </button>
   ))
-  console.log(firstNum)
 
   return (
     <div className="operators">

@@ -6,7 +6,7 @@ function EndGame({ points, revealSolution, revealUserSolution, backBtn, gameInPr
     <div className="end-game">
       <div className={points===10 ? "end-solution-btns-hidden" : "end-solution-btns"}>
         <button className="end-game-solution" onClick={revealSolution}>
-          Reveal Solution
+          Possible Solution
         </button>
         <button className="end-game-solution" onClick={revealUserSolution}>
           Your Solution

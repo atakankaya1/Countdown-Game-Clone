@@ -36,7 +36,7 @@ function App() {
   const [showResult, setShowResult] = useState(false)
   const [selectedMode, setSelectedMode] = useState("1")
   const [numHistory, setNumHistory] = useState([])
-  const [best, setBest] = useState()
+  const [best, setBest] = useState(0)
   const [points, setPoints] = useState(0)
   const [seconds, SetSeconds] = useState(30)
   const [alertSub, setAlertSub] = useState(false)
@@ -51,15 +51,12 @@ function App() {
  
   
 
-  // your best sürekli güncellensin
+  
   // space 2 4e çıkar
   // extensionlara bak
-  // solution -> possible solution?
   // docker bak
   // file organization
 
-  //http://localhost:8080/api/game?largeCount=0
-  // random ı ben atacam
 
   //fetch Request
   
@@ -204,6 +201,7 @@ function App() {
         setFirstNum("")
         setOpe("")
         setSecondNum("")
+        
       } else {
         setFirstNum("")
         setOpe("")
@@ -219,6 +217,7 @@ function App() {
           return updatedNums
         })
       }
+      
     }
   }
 
@@ -258,9 +257,22 @@ function App() {
 
   useEffect(() => {
     if (firstNum && ope && secondNum && showResult) {
-      handleCalculate()
+      handleCalculate()      
     }
   }, [secondNum, ope, showResult])
+
+  useEffect(() => {
+      const availableNumbers = Object.values(nums).filter(num => num.value != 0)
+      if (availableNumbers.length > 0) {
+      // Find the nearest number to the target number
+      const nearestNumber = availableNumbers.reduce((closest, num) => {
+        const diff1 = Math.abs(finalNum - num.value)
+        const diff2 = Math.abs(finalNum - closest.value)
+        return diff1 < diff2 ? num : closest
+      })
+      setBest(prev => ((Math.abs(finalNum - prev) >= Math.abs(finalNum - nearestNumber.value)) ? nearestNumber.value : prev))
+    }
+  }, [secondNum])
 
   function resetAppState() {
     setNumberPicked(false)
@@ -272,7 +284,7 @@ function App() {
     setOriginalNums({})
     setNums({})
     setNumHistory([])
-    setBest()
+    setBest(0)
     setPoints(0)
     setTotalPoints(0)
     setShowResult(false)
@@ -314,19 +326,9 @@ function App() {
   
   function handleAnswer() {
     if(finalNumCheck){
-    const availableNumbers = Object.values(nums).filter(num => num.value != 0)
-
-    if (availableNumbers.length > 0) {
-      // Find the nearest number to the target number
-      const nearestNumber = availableNumbers.reduce((closest, num) => {
-        const diff1 = Math.abs(finalNum - num.value)
-        const diff2 = Math.abs(finalNum - closest.value)
-        return diff1 < diff2 ? num : closest
-      })
-
-    const score = Math.abs(finalNum - nearestNumber.value)
+    
+    const score = Math.abs(finalNum - best)
     setScore(score)
-    setBest(nearestNumber.value)
 
     if(score === 0){
       setPoints(10)
@@ -337,29 +339,7 @@ function App() {
     } else {
       setPoints(0)
     }
-    
-    } else {
-      // If no numbers left, calculate score based on the last remaining number
-      const lastRemainingNumber = Object.values(nums).find(num => num.value !== 0)
-      if (lastRemainingNumber) {
-        const score = Math.abs(finalNum - lastRemainingNumber.value)
-        setScore(score)
-        setBest(lastRemainingNumber.value)
-      
-        if(score === 0){
-          setPoints(10)
-        } else if(score > 0 && score <= 5){
-         setPoints(7)
-        } else if(score > 5 && score <=10 ){
-          setPoints(5)
-        } else {
-          setPoints(0)
-        }
-      } else {
-        // In case of unexpected scenario where there are no numbers left, set score to 0
-        setScore(0)
-      }
-    }
+
     setDisplayScore(true)
     setAreButtonsDisabled(true)
     setFirstNum("")
@@ -447,9 +427,6 @@ function App() {
     setCurrentRound(1)
   }
 
-  console.log("max:",maxRounds)
-  console.log("cur:",currentRound)
-  console.log("gam:",gameInProgress)
   
   return (
     <>
