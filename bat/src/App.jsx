@@ -11,7 +11,7 @@ import Alert from './assets/Alert'
 import PickNumber from './assets/PickNumber'
 import ScorePage from './assets/ScorePage'
 
-const BASE_HOST = "http://localhost:8080/api/game"
+const BASE_HOST = "http://localhost:8080/api/game?largeCount="
 
 function App() {
   
@@ -34,7 +34,7 @@ function App() {
   const [exactSolution, setExactSolution] = useState(true)
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false)
   const [showResult, setShowResult] = useState(false)
-  const [selectedMode, setSelectedMode] = useState("normal")
+  const [selectedMode, setSelectedMode] = useState("1")
   const [numHistory, setNumHistory] = useState([])
   const [best, setBest] = useState()
   const [points, setPoints] = useState(0)
@@ -51,11 +51,21 @@ function App() {
  
   
 
+  // your best sürekli güncellensin
+  // space 2 4e çıkar
+  // extensionlara bak
+  // solution -> possible solution?
+  // docker bak
+  // file organization
+
+  //http://localhost:8080/api/game?largeCount=0
+  // random ı ben atacam
+
   //fetch Request
   
   useEffect(() => {
     if (start) {
-      const fetchUrl = selectedMode === "easy" ? `${BASE_HOST}/easy` : BASE_HOST
+      const fetchUrl = BASE_HOST+selectedMode
   
       fetch(fetchUrl)
         .then((response) => {
@@ -253,27 +263,26 @@ function App() {
   }, [secondNum, ope, showResult])
 
   function resetAppState() {
-    setNumberPicked(false);
-    setSolutionShow(false);
-    setDisplayScore(false);
-    setExactSolution(true);
-    setStart(false);
-    setFinalNumCheck(false);
-    setFinalNum("");
-    setOriginalNums({});
-    setNums({});
-    setNumHistory([]);
-    setBest();
-    setPoints(0);
-    setTotalPoints(0);
-    setShowResult(false);
-    setSolutionUserShow(false);
-    setSolution([]);
-    setScore();
-    setNumHistory([]);
-    setAreButtonsDisabled(false);
-    setOperations([]);
-    setShowAlert(false);
+    setNumberPicked(false)
+    setSolutionShow(false)
+    setDisplayScore(false)
+    setExactSolution(true)
+    setFinalNumCheck(false)
+    setFinalNum("")
+    setOriginalNums({})
+    setNums({})
+    setNumHistory([])
+    setBest()
+    setPoints(0)
+    setTotalPoints(0)
+    setShowResult(false)
+    setSolutionUserShow(false)
+    setSolution([])
+    setScore()
+    setNumHistory([])
+    setAreButtonsDisabled(false)
+    setOperations([])
+    setShowAlert(false)
   }
  
   function handleUndo() {
@@ -375,6 +384,8 @@ function App() {
       }
   }
 
+  
+
   function handleOpe(value){
     if(firstNum){
       setOpe(value)
@@ -422,9 +433,23 @@ function App() {
   }
 
   function main(){
-    resetAppState();
-    setscorePage(false);
+    resetAppState()
+    setStart(false)
+    setscorePage(false)
+    setMaxRounds(1)
+    setCurrentRound(1)
   }
+
+  function backBtn(){
+    resetAppState()
+    setStart(false)
+    setMaxRounds(1)
+    setCurrentRound(1)
+  }
+
+  console.log("max:",maxRounds)
+  console.log("cur:",currentRound)
+  console.log("gam:",gameInProgress)
   
   return (
     <>
@@ -439,7 +464,7 @@ function App() {
           !numberPicked ?
         <PickNumber
           onStartGame={handleStartGame}
-          backBtn={resetAppState}
+          backBtn={backBtn}
         />
         :
         scorePage ?
@@ -490,7 +515,7 @@ function App() {
               points={points}
               revealSolution={revealSolution}
               revealUserSolution={revealUserSolution}
-              backBtn={resetAppState}
+              backBtn={backBtn}
               gameInProgress={gameInProgress}
               handleRound={handleRound}
               currentRound={currentRound}
